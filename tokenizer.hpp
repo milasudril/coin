@@ -3,6 +3,8 @@
 
 namespace SoXN
 	{
+	enum class TokenType:int{BodyText,TagName,AttributeList,AttributeName,AttributeValue};
+
 	template<class Stream,class OutputPolicy>
 	void tokenize(Stream& stream,OutputPolicy&& output)
 		{
@@ -16,7 +18,7 @@ namespace SoXN
 			auto ch_in=getc(stream);
 			if(feof(stream))
 				{
-				output.flush();
+				flush(output);
 				return;
 				}
 
@@ -26,21 +28,23 @@ namespace SoXN
 					switch(ch_in)
 						{
 						case '{':
+							setState(output,TokenType::TagName);
 							state_current=State::TagName;
 							break;
 						case '}':
+							elementClose(output);
 							break;
 						case '\\':
 							state_old=state_current;
 							state_current=State::Escape;
 							break;
 						default:
-							output.write(ch_in);
+							write(ch_in,output);
 						}
 					break;
 
 				case State::Escape:
-					output.write(ch_in);
+					write(ch_in,output);
 					state_current=state_old;
 					break;
 
@@ -48,6 +52,7 @@ namespace SoXN
 					switch(ch_in)
 						{
 						case ':':
+							setState(output,TokenType::BodyText);
 							state_current=State::BodyText;
 							break;
 						case '\\':
@@ -55,10 +60,11 @@ namespace SoXN
 							state_current=State::Escape;
 							break;
 						case '@':
+							setState(output,TokenType::AttributeList);
 							state_current=State::AttributeList;
 							break;
 						default:
-							output.write(ch_in);
+							write(ch_in,output);
 						}
 					break;
 
@@ -66,6 +72,7 @@ namespace SoXN
 					switch(ch_in)
 						{
 						case ':':
+							setState(output,TokenType::BodyText);
 							state_current=State::BodyText;
 							break;
 						case '\\':
@@ -73,7 +80,8 @@ namespace SoXN
 							state_current=State::Escape;
 							break;
 						default:
-							output.write(ch_in);
+							setState(output,TokenType::AttributeName);
+							write(ch_in,output);
 							state_current=State::AttributeName;
 						}
 					break;
@@ -82,6 +90,7 @@ namespace SoXN
 					switch(ch_in)
 						{
 						case '=':
+							setState(output,TokenType::AttributeValue);
 							state_current=State::AttributeValue;
 							break;
 						case '\\':
@@ -89,7 +98,7 @@ namespace SoXN
 							state_current=State::Escape;
 							break;
 						default:
-							output.write(ch_in);
+							write(ch_in,output);
 						}
 					break;
 
@@ -97,17 +106,19 @@ namespace SoXN
 					switch(ch_in)
 						{
 						case ':':
+							setState(output,TokenType::BodyText);
 							state_current=State::BodyText;
 							break;
 						case ';':
 							state_current=State::AttributeName;
+							setState(output,TokenType::AttributeName);
 							break;
 						case '\\':
 							state_old=state_current;
 							state_current=State::Escape;
 							break;
 						default:
-							output.write(ch_in);
+							write(ch_in,output);
 						}
 					break;
 				}

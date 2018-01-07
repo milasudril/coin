@@ -13,7 +13,7 @@
 			{-:{td:{code:<element foo="a" bar="b">content</element>}}               {-:{code:\{element@foo=a;bar=b: {var:content}\}}}}
 			{-:{td:{code:<element />}}                                              {-:{code:\{element:\}}}}
 			{-:{td:{code:<element foo="1">a</element><element foo="1">b</element>}} {-:{code:\{element@foo=1:a\}\{-:b\}}}}
-			{-:{td:{code:<!--comment-->}}                                           {-:{code:\{!:comment}}}}
+			{-:{td:{code:<!--comment-->}}                                           {-:{code:\{!:comment\}}}}
 			{-:{td:{code:<![CDATA[character data]]>}}                               {-:Not needed, use the general escape character}}
 			{-:{td:Different escape sequences {code:&lt;} et.al.}                   {-:{code:\\{var:reserved character}}}}
 			{-:{td:Custum character entities}                                       {-:Feature not present}}
