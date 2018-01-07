@@ -72,6 +72,12 @@ namespace
 
 	void outputBegin(const Tag& tag)
 		{
+		if(tag.name()=="!")
+			{
+			printf("<!--"); //This is a comment. Since we just converts the document to XML, keep it.
+			return;
+			}
+
 		if(!nameValid(tag.name()))
 			{abort();}
 		printf("<%s",tag.name().c_str());
@@ -86,6 +92,13 @@ namespace
 		{
 		if(tag.name()=="")
 			{abort();}
+
+		if(tag.name()=="!")
+			{
+			printf("-->");
+			return;
+			}
+
 		printf("</%s>",tag.name().c_str());
 		}
 
