@@ -17,8 +17,8 @@ namespace
 			Tag()=default;
 			explicit Tag(const std::string& name):m_name(name){}
 
-			const char* name() const
-				{return m_name.c_str();}
+			const std::string& name() const
+				{return m_name;}
 
 			auto attribsBegin() const
 				{return m_attributes.begin();}
@@ -60,9 +60,21 @@ namespace
 			});
 		}
 
+	bool nameValid(const std::string& str)
+		{
+		return std::find_if(str.begin(),str.end(),[](char ch_check)
+			{
+		//	For now, only check stuff that would lead to syntactical issues
+			return ch_check=='<' || ch_check=='>' || ch_check=='"' || ch_check=='=' || ch_check=='/'
+				|| (ch_check>='\0' && ch_check<=' ');
+			})==str.end();
+		}
+
 	void outputBegin(const Tag& tag)
 		{
-		printf("<%s",tag.name());
+		if(!nameValid(tag.name()))
+			{abort();}
+		printf("<%s",tag.name().c_str());
 		std::for_each(tag.attribsBegin(),tag.attribsEnd(),[](const auto& attrib)
 			{
 			printf(" %s=\"%s\"",attrib.first.c_str(),attrib.second.c_str());
@@ -72,7 +84,9 @@ namespace
 
 	void outputEnd(const Tag& tag)
 		{
-		printf("</%s>",tag.name());
+		if(tag.name()=="")
+			{abort();}
+		printf("</%s>",tag.name().c_str());
 		}
 
 	class XMLWriter
