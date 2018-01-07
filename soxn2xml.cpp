@@ -1,20 +1,125 @@
-//@	{"targets":[{"name":"soxn2xml","type":"application"}]}
+//@	{"targets":[{"name":"soxn2xml","type":"application","cxxoptions":{"cxxversion_min":201402}}]}
 
 #include <cstdio>
 #include "tokenizer.hpp"
 #include <string>
 #include <stack>
+#include <map>
+#include <algorithm>
 
 namespace
 	{
-	void test(const SoXN::Token& tok)
+	class Tag
 		{
-		printf("%d, [%s]\n",tok.type,tok.value.c_str());
-		}
+		public:
+			typedef std::pair<std::string,std::string> attribute;
+
+			Tag()=default;
+			explicit Tag(const std::string& name):m_name(name){}
+
+			const char* name() const
+				{return m_name.c_str();}
+
+			auto attribsBegin() const
+				{return m_attributes.begin();}
+
+			auto attribsEnd() const
+				{return m_attributes.end();}
+
+			void insert(const attribute& attrib)
+				{
+				auto ip=m_attributes.insert(attrib);
+				if(!ip.second)
+					{abort();}
+				}
+
+		private:
+			std::string m_name;
+			std::map<std::string,std::string> m_attributes;
+
+		};
+
+	class XMLWriter
+		{
+		public:
+
+			void operator()(const SoXN::Token& token)
+				{
+				switch(token.type)
+					{
+					case SoXN::TokenType::TagNameNoAttributes:
+						m_tag_stack.push(m_tag_current);
+						m_tag_current=Tag(token.value);
+						outputBegin(m_tag_current);
+						break;
+
+					case SoXN::TokenType::TagName:
+						m_tag_stack.push(m_tag_current);
+						m_tag_current=Tag(token.value);
+						break;
+
+					case SoXN::TokenType::BodyText:
+						output(token.value);
+						break;
+
+					case SoXN::TokenType::AttributeNameFirst:
+						m_attrib.first=token.value;
+						break;
+
+					case SoXN::TokenType::AttributeName:
+						m_attrib.first=token.value;
+						break;
+
+					case SoXN::TokenType::AttributeValue:
+						m_attrib.second=token.value;
+						m_tag_current.insert(m_attrib);
+						break;
+
+					case SoXN::TokenType::AttributeValueLast:
+						m_attrib.second=token.value;
+						m_tag_current.insert(m_attrib);
+						outputBegin(m_tag_current);
+						break;
+
+					case SoXN::TokenType::BodyTextLast:
+						output(token.value);
+						outputEnd(m_tag_current);
+						m_tag_current=m_tag_stack.top();
+						m_tag_stack.pop();
+						break;
+					}
+				}
+
+		private:
+			Tag m_tag_prev;
+			Tag m_tag_current;
+			std::stack<Tag> m_tag_stack;
+			Tag::attribute m_attrib;
+
+			void output(const std::string& str)
+				{
+				printf("%s",str.c_str());
+				}
+
+			void outputBegin(const Tag& tag)
+				{
+				printf("<%s",tag.name());
+				std::for_each(tag.attribsBegin(),tag.attribsEnd(),[](const auto& attrib)
+					{
+					printf(" %s=\"%s\"",attrib.first.c_str(),attrib.second.c_str());
+					});
+				printf(">");
+				}
+
+			void outputEnd(const Tag& tag)
+				{
+				printf("</%s>",tag.name());
+				}
+		};
 	}
 
 int main()
 	{
-	SoXN::tokenize(stdin,&test);
+	SoXN::tokenize(stdin,XMLWriter{});
 	return 0;
 	}

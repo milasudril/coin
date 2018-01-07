@@ -5,7 +5,17 @@
 
 namespace SoXN
 	{
-	enum class TokenType:int{BodyText,BodyTextLast,TagName,AttributeNameFirst,AttributeName,AttributeValue};
+	enum class TokenType:int
+		{
+		 BodyText
+		,BodyTextLast
+		,TagName
+		,TagNameNoAttributes
+		,AttributeNameFirst
+		,AttributeName
+		,AttributeValue
+		,AttributeValueLast
+		};
 
 	struct Token
 		{
@@ -21,7 +31,6 @@ namespace SoXN
 		auto state_current=State::BodyText;
 		auto state_old=state_current;
 		Token tok;
-
 		while(true)
 			{
 			auto ch_in=getc(stream);
@@ -34,6 +43,7 @@ namespace SoXN
 					switch(ch_in)
 						{
 						case '{':
+							tok.type=TokenType::BodyText;
 							output(tok);
 							tok.value.clear();
 							tok.type=TokenType::TagName;
@@ -62,6 +72,7 @@ namespace SoXN
 					switch(ch_in)
 						{
 						case ':':
+							tok.type=TokenType::TagNameNoAttributes;
 							output(tok);
 							tok.value.clear();
 							tok.type=TokenType::BodyText;
@@ -72,6 +83,7 @@ namespace SoXN
 							state_current=State::Escape;
 							break;
 						case '@':
+							tok.type=TokenType::TagName;
 							output(tok);
 							tok.value.clear();
 							tok.type=TokenType::AttributeNameFirst;
@@ -120,6 +132,7 @@ namespace SoXN
 					switch(ch_in)
 						{
 						case ':':
+							tok.type=TokenType::AttributeValueLast;
 							output(tok);
 							tok.value.clear();
 							tok.type=TokenType::BodyText;
