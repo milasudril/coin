@@ -102,7 +102,7 @@ namespace
 		printf("</%s>",tag.name().c_str());
 		}
 
-	class XMLWriter
+	class Writer
 		{
 		public:
 			void operator()(const SoXN::Token& token)
@@ -152,6 +152,8 @@ namespace
 						break;
 
 					case SoXN::TokenType::BodyTextLast:
+						if(m_tag_stack.size()==0)
+							{abort();}
 						output(token.value);
 						outputEnd(m_tag_current);
 						m_tag_prev=m_tag_current;
@@ -171,6 +173,6 @@ namespace
 
 int main()
 	{
-	SoXN::tokenize(stdin,XMLWriter{});
+	SoXN::tokenize(stdin,Writer{});
 	return 0;
 	}
