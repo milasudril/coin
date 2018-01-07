@@ -1,4 +1,4 @@
-{!:This file demonstrates the SoXN file {!:comment} format}
+{!:This file demonstrates the SoXN file format}
 {html:
 	{head:
 		{meta@charset=UTF-8:}
@@ -10,8 +10,8 @@
 
 		{table:
 			{tr:{th:XML}{-:SoXN}}
-			{-:{td:{code:<element>content</element>}}                               {-:{code:\{element: {var:content}\}}}}
-			{-:{td:{code:<element foo="a" bar="b">content</element>}}               {-:{code:\{element@foo=a;bar=b: {var:content}\}}}}
+			{-:{td:{code:<element>content</element>}}                               {-:{code:\{element:{var:content}\}}}}
+			{-:{td:{code:<element foo="a" bar="b">content</element>}}               {-:{code:\{element@foo=a;bar=b:{var:content}\}}}}
 			{-:{td:{code:<element />}}                                              {-:{code:\{element:\}}}}
 			{-:{td:{code:<element foo="1">a</element><element foo="1">b</element>}} {-:{code:\{element@foo=1:a\}\{-:b\}}}}
 			{-:{td:{code:<!--comment-->}}                                           {-:{code:\{!:comment\}}}}
@@ -26,6 +26,6 @@
 		{pre:\{my element@some attribute=a value
 with newline: Element content:\}}
 
-		{p:For compatibility with XML, such content should be avoided, and the reference converter delivered within this repository will throw an {em:encoding} (not decoding) error when output data would not be valid XML.}
+		{p:For compatibility with XML, such content should be avoided, and the reference converter delivered within this repository will throw an {em:encoding} (not decoding) error in this case.}
 	}
 }
