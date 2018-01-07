@@ -1,0 +1,26 @@
+digraph "G"
+	{
+	BodyText -> TagName [label="{"];
+	BodyText -> BodyText [label="}"];
+	BodyText -> Escape [label="\\"];
+	BodyText -> BodyText[label="*"];
+
+	TagName -> BodyText [label=":"];
+	TagName -> AttributeList [label="@"];
+	TagName -> Escape [label="\\"];
+	TagName -> TagName[label="*"];
+
+	Escape -> "{state_prev}" [label="*"]
+
+	AttributeList -> BodyText[label=":"];
+	AttributeList -> Escape [label="\\"];
+	AttributeList -> AttributeName[label="*"];
+
+	AttributeName->AttributeValue[label="="];
+	AttributeName->Escape [label="\\"];
+	AttributeName->AttributeName[label="*"];
+
+	AttributeValue->AttributeName[label=";"];
+	AttributeValue->BodyText[label=":"];
+	AttributeValue->AttributeValue[label="*"];
+	}
