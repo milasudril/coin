@@ -20,7 +20,7 @@
 			{-:{td:Stylesheet or DTD references}                                    {-:Feature not present}}
 		}
 
-		{p:For simplicity, SoXN will always preserve any whitespace. This means that a SoXN document may contain tags that cannot directly be encoded in traditional XML. For example, this is perfectly valid SoXN:}
+		{p:As with XML, element and attributes are case sensitive. For simplicity, SoXN will always preserve any whitespace. This means that a SoXN document may contain tags that cannot directly be encoded in traditional XML. For example, this is perfectly valid SoXN:}
 
 		{pre:\{my element@some attribute=a value
 with newline: Element content:\}}
