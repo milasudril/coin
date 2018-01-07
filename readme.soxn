@@ -1,0 +1,30 @@
+{html:
+	{head:
+		{meta@charset=UTF-8:}
+		{title:SoXN: Shorthand Xml Notation}
+	}
+	{body:
+		{h1: Shorthand Xml Notation}
+		{p: Shorthand Xml Notation, or SoXN, is a way of writing XML-like documents in a more compact form. SoXN allows smaller, and more readable XML files to be written, while maintaining similar markup features. The following table shows a comparison between SoXN and XML.}
+
+		{table:
+			{tr:{th:XML}{-:SoXN}}
+			{-:{td:{code:<element>content</element>}}                               {-:{code:\{element: {var:content}\}}}}
+			{-:{td:{code:<element foo="a" bar="b">content</element>}}               {-:{code:\{element@foo=a;bar=b: {var:content}\}}}}
+			{-:{td:{code:<element />}}                                              {-:{code:\{element:\}}}}
+			{-:{td:{code:<element foo="1">a</element><element foo="1">b</element>}} {-:{code:\{element@foo=1:a\}\{-:b\}}}}
+			{-:{td:{code:<!--comment-->}}                                           {-:{code:\{!:comment}}}}
+			{-:{td:{code:<![CDATA[character data]]>}}                               {-:Not needed, use the general escape character}}
+			{-:{td:Different escape sequences {code:&lt;} et.al.}                   {-:{code:\\{var:reserved character}}}}
+			{-:{td:Custum character entities}                                       {-:Feature not present}}
+			{-:{td:Stylesheet or DTD references}                                    {-:Feature not present}}
+		}
+
+		{p:For simplicity, SoXN will always preserve any whitespace except carrige-return. This means that a SoXN document may contain tags that cannot directly be encoded in traditional XML. For example, this is perfectly valid SoXN:}
+
+		{pre: \{my element@some attribute=a value
+with newline: Element content:\}}
+
+		{p:For compatibility with XML, such content should be avoided, and the reference converter delivered within this repository will throw an {em:encoding} (not decoding) error when output data would not be valid XML.}
+	}
+}
