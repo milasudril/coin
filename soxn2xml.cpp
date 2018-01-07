@@ -168,6 +168,11 @@ namespace
 						m_tag_current=m_tag_stack.top();
 						m_tag_stack.pop();
 						break;
+
+					case SoXN::TokenType::EndOfFile:
+						if(m_tag_stack.size()!=0)
+							{abort();}
+						break;
 					}
 				}
 

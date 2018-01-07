@@ -15,6 +15,7 @@ namespace SoXN
 		,AttributeName
 		,AttributeValue
 		,AttributeValueLast
+		,EndOfFile
 		};
 
 	struct Token
@@ -35,7 +36,10 @@ namespace SoXN
 			{
 			auto ch_in=getc(stream);
 			if(feof(stream))
-				{return;}
+				{
+				output(Token{"",TokenType::EndOfFile});
+				return;
+				}
 
 			switch(state_current)
 				{
