@@ -15,7 +15,12 @@ namespace
 			typedef std::pair<std::string,std::string> attribute;
 
 			Tag()=default;
-			explicit Tag(const std::string& name):m_name(name){}
+			explicit Tag(const std::string& name)
+				{
+				if(name=="")
+					{abort();}
+				m_name=name;
+				}
 
 			const std::string& name() const
 				{return m_name;}
@@ -28,6 +33,9 @@ namespace
 
 			void insert(const attribute& attrib)
 				{
+				if(attrib.first=="")
+					{abort();}
+
 				auto ip=m_attributes.insert(attrib);
 				if(!ip.second)
 					{abort();}
