@@ -41,7 +41,23 @@ namespace
 
 	void output(const std::string& str)
 		{
-		printf("%s",str.c_str());
+		std::for_each(str.begin(),str.end(),[](char ch_out)
+			{
+			switch(ch_out)
+				{
+				case '<':
+					printf("&lt;");
+					break;
+				case '>':
+					printf("&gt;");
+					break;
+				case '&':
+					printf("&amp;");
+					break;
+				default:
+					putchar(ch_out);
+				}
+			});
 		}
 
 	void outputBegin(const Tag& tag)
