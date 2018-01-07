@@ -49,8 +49,16 @@ namespace
 					{
 					case SoXN::TokenType::TagNameNoAttributes:
 						m_tag_stack.push(m_tag_current);
-						m_tag_current=Tag(token.value);
-						outputBegin(m_tag_current);
+						if(token.value=="-")
+							{
+							m_tag_current=m_tag_prev; //Restore previous tag
+							outputBegin(m_tag_prev);
+							}
+						else
+							{
+							m_tag_current=Tag(token.value);
+							outputBegin(m_tag_current);
+							}
 						break;
 
 					case SoXN::TokenType::TagName:
@@ -84,6 +92,7 @@ namespace
 					case SoXN::TokenType::BodyTextLast:
 						output(token.value);
 						outputEnd(m_tag_current);
+						m_tag_prev=m_tag_current;
 						m_tag_current=m_tag_stack.top();
 						m_tag_stack.pop();
 						break;
