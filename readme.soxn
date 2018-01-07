@@ -26,6 +26,6 @@
 		{pre:\{my element@some attribute=a value
 with newline: Element content:\}}
 
-		{p:For compatibility with XML, such content should be avoided, and the reference converter delivered within this repository will throw an {em:encoding} (not decoding) error in this case.}
+		{p:For compatibility with XML, such content should be avoided, and the converter delivered within this repository will throw an {em:encoding} (not decoding) error in this case.}
 	}
 }
