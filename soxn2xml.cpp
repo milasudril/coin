@@ -39,10 +39,29 @@ namespace
 
 		};
 
+	void output(const std::string& str)
+		{
+		printf("%s",str.c_str());
+		}
+
+	void outputBegin(const Tag& tag)
+		{
+		printf("<%s",tag.name());
+		std::for_each(tag.attribsBegin(),tag.attribsEnd(),[](const auto& attrib)
+			{
+			printf(" %s=\"%s\"",attrib.first.c_str(),attrib.second.c_str());
+			});
+		printf(">");
+		}
+
+	void outputEnd(const Tag& tag)
+		{
+		printf("</%s>",tag.name());
+		}
+
 	class XMLWriter
 		{
 		public:
-
 			void operator()(const SoXN::Token& token)
 				{
 				switch(token.type)
@@ -104,26 +123,6 @@ namespace
 			Tag m_tag_current;
 			std::stack<Tag> m_tag_stack;
 			Tag::attribute m_attrib;
-
-			void output(const std::string& str)
-				{
-				printf("%s",str.c_str());
-				}
-
-			void outputBegin(const Tag& tag)
-				{
-				printf("<%s",tag.name());
-				std::for_each(tag.attribsBegin(),tag.attribsEnd(),[](const auto& attrib)
-					{
-					printf(" %s=\"%s\"",attrib.first.c_str(),attrib.second.c_str());
-					});
-				printf(">");
-				}
-
-			void outputEnd(const Tag& tag)
-				{
-				printf("</%s>",tag.name());
-				}
 		};
 	}
 
