@@ -75,6 +75,7 @@ namespace SoXN
 				case State::TagName:
 					switch(ch_in)
 						{
+					//TODO: Currently, literal '}' is allowed in tag names. It should be interpreted as the sequence  ":}"
 						case ':':
 							tok.type=TokenType::TagNameNoAttributes;
 							output(tok);
@@ -101,7 +102,8 @@ namespace SoXN
 				case State::AttributeList:
 					switch(ch_in)
 						{
-						case ':':
+					//TODO: Currently, literal '}' is allowed in tag names. It is probably better to claim it is an error.
+						case ':': //TODO: Should empty attribute list be allowed?
 							state_current=State::BodyText;
 							break;
 						case '\\':
@@ -117,6 +119,7 @@ namespace SoXN
 				case State::AttributeName:
 					switch(ch_in)
 						{
+					//TODO: Currently, literal '}' is allowed in attribute names. It is probably better to claim it is an error.
 						case '=':
 							output(tok);
 							tok.value.clear();
@@ -135,6 +138,7 @@ namespace SoXN
 				case State::AttributeValue:
 					switch(ch_in)
 						{
+					//TODO: Currently, literal '}' is allowed in attribute values. It is probably better to claim it is an error.
 						case ':':
 							tok.type=TokenType::AttributeValueLast;
 							output(tok);
