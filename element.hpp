@@ -1,4 +1,7 @@
-//@	{"targets":[{"name":"element.hpp","type":"include"}]}
+//@	{
+//@	"targets":[{"name":"element.hpp","type":"include"}]
+//@	,"dependencies_extra":{"ref":"element.o","rel":"implementation"}
+//@	}
 
 #ifndef SOXN_ELEMENT_HPP
 #define SOXN_ELEMENT_HPP
@@ -14,16 +17,12 @@ namespace SoXN
 	class Element
 		{
 		public:
-			template<class Function>
-			void forEachChild(Function&& f) const
-				{
-				}
 
 		private:
 			std::string m_name;
 			std::map<std::string,std::string> m_attribs;
 			std::vector<Node> m_children;
-		}
+		};
 	}
 
 #endif
