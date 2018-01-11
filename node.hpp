@@ -5,6 +5,7 @@
 
 #include <utility>
 #include <cassert>
+#include <cstdio>
 
 namespace SoXN
 	{
@@ -73,14 +74,18 @@ namespace SoXN
 					{
 					case Type::Element:
 						delete m_element;
+						break;
 					case Type::String:
 						delete m_string;
+						break;
 					}
 				}
 
 
 			Node(Node&& node) noexcept:m_type(node.m_type),m_element(node.m_element)
-				{node.m_element=nullptr;}
+				{
+				node.m_element=nullptr;
+				}
 
 			Node& operator=(Node&& node) noexcept
 				{
