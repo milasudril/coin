@@ -10,14 +10,28 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <cassert>
 
 namespace SoXN
 	{
 	class Element
 		{
 		public:
-			typedef Node<Element,std::string> node_type;
+			typedef Node<Element,std::string> NodeModel;
 			typedef std::pair<std::string,std::string> Attribute;
+
+			template<class T>
+			class NodePtr
+				{
+				public:
+				private:
+					explicit NodePtr(const std::vector<NodeModel>& nodes,size_t offset) noexcept:
+						r_nodes(nodes),m_offset(offset)
+						{assert(offset < nodes.size());}
+
+					const std::vector<NodeModel>& r_nodes;
+					size_t m_offset;
+				};
 
 			explicit Element(const std::string& name):m_name(name)
 				{}
@@ -31,17 +45,30 @@ namespace SoXN
 			std::string& name() noexcept
 				{return m_name;}
 
-			Element& append(const node_type& node)
+			Element& append(const NodeModel& node)
 				{
 				m_children.push_back(node);
 				return *this;
 				}
 
-			Element& append(node_type&& node)
+			Element& append(NodeModel&& node)
 				{
 				m_children.push_back(std::move(node));
 				return *this;
 				}
+
+			NodeModel& node(size_t index) noexcept
+				{
+				assert(index<m_children.size());
+				return m_children[index];
+				}
+
+			const NodeModel& node(size_t index) const noexcept
+				{
+				assert(index<m_children.size());
+				return m_children[index];
+				}
+
 
 			template<class Function>
 			const Element& visitChildren(Function&& f) const
@@ -99,7 +126,7 @@ namespace SoXN
 		private:
 			std::string m_name;
 			std::map<std::string,std::string> m_attribs;
-			std::vector<node_type> m_children;
+			std::vector<NodeModel> m_children;
 		};
 	}
 

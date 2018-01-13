@@ -5,7 +5,7 @@
 #include "element.hpp"
 #include <cassert>
 
-static void show(const SoXN::Element::node_type& node);
+static void show(const SoXN::Element::NodeModel& node);
 
 static void show(const SoXN::Element& element)
 	{
@@ -18,7 +18,7 @@ static void show(const SoXN::Element& element)
 	printf("</%s>",element.name().c_str());
 	}
 
-static void show(const SoXN::Element::node_type& node)
+static void show(const SoXN::Element::NodeModel& node)
 	{
 	switch(node.type())
 		{
@@ -36,7 +36,7 @@ int main()
 	{
 	SoXN::Element html("html");
 	SoXN::Element head("head");
-	html.append(SoXN::Element::node_type(head));
+	html.append(SoXN::Element::NodeModel(head));
 	show(html);
 	return 0;
 	}
