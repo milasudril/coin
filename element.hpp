@@ -20,16 +20,21 @@ namespace SoXN
 			typedef Node<Element,std::string> NodeModel;
 			typedef std::pair<std::string,std::string> Attribute;
 
-			template<class T>
+			template<class NodeContainer,class T>
 			class NodePtr
 				{
 				public:
+					T& operator*() noexcept
+						{return r_nodes[m_offset].template getAs<T>();}
+					T* operator->() noexcept
+						{return &r_nodes[m_offset].template getAs<T>();}
+
 				private:
-					explicit NodePtr(const std::vector<NodeModel>& nodes,size_t offset) noexcept:
+					explicit NodePtr(NodeContainer nodes,size_t offset) noexcept:
 						r_nodes(nodes),m_offset(offset)
 						{assert(offset < nodes.size());}
 
-					const std::vector<NodeModel>& r_nodes;
+					NodeContainer r_nodes;
 					size_t m_offset;
 				};
 
@@ -45,17 +50,21 @@ namespace SoXN
 			std::string& name() noexcept
 				{return m_name;}
 
-			Element& append(const NodeModel& node)
+			template<class T>
+			Element& append(const T& content)
 				{
-				m_children.push_back(node);
+				m_children.push_back(NodeModel(content));
 				return *this;
 				}
 
-			Element& append(NodeModel&& node)
+			template<class T>
+			Element& append(T&& content)
 				{
-				m_children.push_back(std::move(node));
+				m_children.push_back(NodeModel(std::forward<T>(content)));
 				return *this;
 				}
+
+
 
 			NodeModel& node(size_t index) noexcept
 				{

@@ -22,8 +22,7 @@ static void show(const SoXN::Element& element)
 int main()
 	{
 	SoXN::Element html("html");
-	SoXN::Element head("head");
-	html.append(SoXN::Element::NodeModel(head));
+	html.append(SoXN::Element("head"));
 	show(html);
 	return 0;
 	}
