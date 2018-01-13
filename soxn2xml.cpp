@@ -44,7 +44,6 @@ namespace
 		private:
 			std::string m_name;
 			std::map<std::string,std::string> m_attributes;
-
 		};
 
 	void output(const std::string& str)

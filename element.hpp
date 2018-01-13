@@ -6,10 +6,8 @@
 #define SOXN_ELEMENT_HPP
 
 #include "node.hpp"
-#include <string>
-#include <map>
+#include "tag.hpp"
 #include <vector>
-#include <algorithm>
 #include <cassert>
 
 namespace SoXN
@@ -18,7 +16,7 @@ namespace SoXN
 		{
 		public:
 			typedef Node<Element,std::string> NodeModel;
-			typedef std::pair<std::string,std::string> Attribute;
+			typedef Tag::Attribute Attribute;
 
 			template<class NodeContainer,class T>
 			class NodePtr
@@ -40,17 +38,17 @@ namespace SoXN
 					size_t m_offset;
 				};
 
-			explicit Element(const std::string& name):m_name(name)
+			explicit Element(const std::string& name):m_tag(name)
 				{}
 
-			explicit Element(std::string&& name):m_name(std::move(name))
+			explicit Element(const Tag& tag):m_tag(tag)
+				{}
+
+			explicit Element(std::string&& name):m_tag(std::move(name))
 				{}
 
 			const std::string& name() const noexcept
-				{return m_name;}
-
-			std::string& name() noexcept
-				{return m_name;}
+				{return m_tag.name();}
 
 			template<class T>
 			Element& append(T&& content)
@@ -100,34 +98,17 @@ namespace SoXN
 
 
 			const std::string& attribute(const std::string& name) const
-				{
-				auto i=m_attribs.find(name);
-				if(i==m_attribs.end())
-					{abort();}
-				return i->second;
-				}
+				{return m_tag.attribute(name);}
 
 			std::string& attribute(const std::string& name)
-				{
-				auto i=m_attribs.find(name);
-				if(i==m_attribs.end())
-					{abort();}
-				return i->second;
-				}
+				{return m_tag.attribute(name);}
 
 			std::string& attributeCreate(const std::string& name)
-				{
-				auto ip=m_attribs.insert({name,""});
-				if(!ip.second)
-					{abort();}
-				return ip.first->second;
-				}
+				{return m_tag.attributeCreate(name);}
 
 			Element& attributeAdd(const std::string& name,const std::string& value)
 				{
-				auto ip=m_attribs.insert({name,value});
-				if(!ip.second)
-					{abort();}
+				m_tag.attributeAdd(name,value);
 				return *this;
 				}
 
@@ -135,20 +116,19 @@ namespace SoXN
 			template<class Function>
 			const Element& visitAttributes(Function&& f) const
 				{
-				std::for_each(m_attribs.begin(),m_attribs.end(),std::forward<Function>(f));
+				m_tag.visitAttributes(std::forward<Function>(f));
 				return *this;
 				}
 
 			template<class Function>
 			Element& visitAttributes(Function&& f)
 				{
-				std::for_each(m_attribs.begin(),m_attribs.end(),std::forward<Function>(f));
+				m_tag.visitAttributes(std::forward<Function>(f));
 				return *this;
 				}
 
 		private:
-			std::string m_name;
-			std::map<std::string,std::string> m_attribs;
+			Tag m_tag;
 			typedef std::vector<NodeModel> ChildrenStorage;
 			ChildrenStorage m_children;
 		};
