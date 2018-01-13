@@ -73,14 +73,14 @@ namespace SoXN
 			template<class Function>
 			const Element& visitChildren(Function&& f) const
 				{
-				std::for_each(m_children.begin(),m_children.end(),std::forward<Function>(f));
+				std::for_each(m_children.begin(), m_children.end(), [&f](const auto& node){visit(node,f);});
 				return *this;
 				}
 
 			template<class Function>
 			Element& visitChildren(Function&& f)
 				{
-				std::for_each(m_children.begin(),m_children.end(),std::forward<Function>(f));
+				std::for_each(m_children.begin(), m_children.end(), [&f](auto& node){visit(node,f);});
 				return *this;
 				}
 

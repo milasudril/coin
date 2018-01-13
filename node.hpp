@@ -112,6 +112,37 @@ namespace SoXN
 					{return *node.m_string;}
 				};
 		};
+
+	template<class ElementModel,class StringModel,class Function>
+	void visit(const Node<ElementModel,StringModel>& node,Function&& f)
+		{
+		typedef typename Node<ElementModel,StringModel>::Type NodeType;
+		switch(node.type())
+			{
+			case NodeType::Element:
+				f(node.template getAs<ElementModel>());
+				break;
+			case NodeType::String:
+				f(node.template getAs<StringModel>());
+				break;
+			}
+		}
+
+
+	template<class ElementModel,class StringModel,class Function>
+	void visit(Node<ElementModel,StringModel>& node,Function&& f)
+		{
+		typedef typename Node<ElementModel,StringModel>::Type NodeType;
+		switch(node.type())
+			{
+			case NodeType::Element:
+				f(node.template getAs<ElementModel>());
+				break;
+			case NodeType::String:
+				f(node.template getAs<StringModel>());
+				break;
+			}
+		}
 	}
 
 #endif

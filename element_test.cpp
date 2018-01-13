@@ -5,7 +5,8 @@
 #include "element.hpp"
 #include <cassert>
 
-static void show(const SoXN::Element::NodeModel& node);
+static void show(const std::string& str)
+	{printf("%s",str.c_str());}
 
 static void show(const SoXN::Element& element)
 	{
@@ -16,20 +17,6 @@ static void show(const SoXN::Element& element)
 	element.visitChildren([](const auto& node)
 		{show(node);});
 	printf("</%s>",element.name().c_str());
-	}
-
-static void show(const SoXN::Element::NodeModel& node)
-	{
-	switch(node.type())
-		{
-		case SoXN::Element::NodeModel::Type::String:
-			printf("%s", node.getAs<std::string>().c_str());
-			break;
-
-		case SoXN::Element::NodeModel::Type::Element:
-			show(node.getAs<SoXN::Element>());
-			break;
-		}
 	}
 
 int main()
