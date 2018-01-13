@@ -22,11 +22,11 @@ static void show(const SoXN::Element::NodeModel& node)
 	{
 	switch(node.type())
 		{
-		case SoXN::NodeType::String:
+		case SoXN::Element::NodeModel::Type::String:
 			printf("%s", node.getAs<std::string>().c_str());
 			break;
 
-		case SoXN::NodeType::Element:
+		case SoXN::Element::NodeModel::Type::Element:
 			show(node.getAs<SoXN::Element>());
 			break;
 		}

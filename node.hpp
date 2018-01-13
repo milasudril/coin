@@ -9,13 +9,11 @@
 
 namespace SoXN
 	{
-	enum class NodeType{Element, String};
-
 	template<class ElementType,class StringType>
 	class Node //[Upgrade lang C++17]: variant
 		{
 		public:
-			typedef NodeType Type;
+			enum class Type{Element, String};
 			typedef ElementType element_type;
 			typedef StringType string_type;
 
