@@ -21,8 +21,29 @@ static void show(const SoXN::Element& element)
 
 int main()
 	{
-	SoXN::Element html("html");
-	html.append(SoXN::Element("head"));
-	show(html);
+		{
+		SoXN::Element test_a("html");
+		test_a.append(SoXN::Element("head"));
+
+		SoXN::Element test_b("body");
+		test_a.append(test_b);
+		show(test_a);
+		putchar('\n');
+		}
+
+
+	SoXN::Element test_b("html");
+
+	test_b.create(SoXN::Element("head"))
+		->create(SoXN::Element("meta"))
+			->attributeAdd("charset","UTF-8");
+	/*		.parent()
+		->createAndAppend(SoXN::Element("title"))
+			->append("Hello, World")
+			.append(" More stuff")
+			.parent();*/
+
+	show(test_b);
+
 	return 0;
 	}

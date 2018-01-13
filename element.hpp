@@ -19,6 +19,7 @@ namespace SoXN
 		public:
 			typedef Node<Element,std::string> NodeModel;
 			typedef std::pair<std::string,std::string> Attribute;
+			typedef std::vector<NodeModel> ChildrenStorage;
 
 			template<class NodeContainer,class T>
 			class NodePtr
@@ -30,6 +31,8 @@ namespace SoXN
 						{return &r_nodes[m_offset].template getAs<T>();}
 
 				private:
+					friend class Element;
+
 					explicit NodePtr(NodeContainer nodes,size_t offset) noexcept:
 						r_nodes(nodes),m_offset(offset)
 						{assert(offset < nodes.size());}
@@ -51,17 +54,17 @@ namespace SoXN
 				{return m_name;}
 
 			template<class T>
-			Element& append(const T& content)
-				{
-				m_children.push_back(NodeModel(content));
-				return *this;
-				}
-
-			template<class T>
 			Element& append(T&& content)
 				{
 				m_children.push_back(NodeModel(std::forward<T>(content)));
 				return *this;
+				}
+
+			template<class T>
+			auto create(T&& content)
+				{
+				append(std::forward<T>(content));
+				return NodePtr<ChildrenStorage&,T>(m_children,m_children.size() - 1);
 				}
 
 
@@ -93,6 +96,9 @@ namespace SoXN
 				return *this;
 				}
 
+			auto childCount() const
+				{return m_children.size();}
+
 
 			const std::string& attribute(const std::string& name) const
 				{
@@ -110,13 +116,22 @@ namespace SoXN
 				return i->second;
 				}
 
-			std::string& attributeAdd(const std::string& name)
+			std::string& attributeCreate(const std::string& name)
 				{
 				auto ip=m_attribs.insert({name,""});
 				if(!ip.second)
 					{abort();}
 				return ip.first->second;
 				}
+
+			Element& attributeAdd(const std::string& name,const std::string& value)
+				{
+				auto ip=m_attribs.insert({name,value});
+				if(!ip.second)
+					{abort();}
+				return *this;
+				}
+
 
 			template<class Function>
 			const Element& visitAttributes(Function&& f) const
@@ -135,7 +150,7 @@ namespace SoXN
 		private:
 			std::string m_name;
 			std::map<std::string,std::string> m_attribs;
-			std::vector<NodeModel> m_children;
+			ChildrenStorage m_children;
 		};
 	}
 

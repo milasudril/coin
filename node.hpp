@@ -5,7 +5,6 @@
 
 #include <utility>
 #include <cassert>
-#include <cstdio>
 
 namespace SoXN
 	{
