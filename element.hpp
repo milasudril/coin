@@ -16,27 +16,20 @@ namespace SoXN
 		{
 		public:
 			typedef Node<Element,std::string> NodeModel;
+
+		private:
+			template<class NodeContainer,class T>
+			class NodePtrImpl;
+			typedef std::vector<NodeModel> ChildrenStorage;
+
+		public:
 			typedef Tag::Attribute Attribute;
 
-			template<class NodeContainer,class T>
-			class NodePtr
-				{
-				public:
-					T& operator*() noexcept
-						{return r_nodes[m_offset].template getAs<T>();}
-					T* operator->() noexcept
-						{return &r_nodes[m_offset].template getAs<T>();}
+			template<class T>
+			using NodePtr=NodePtrImpl<ChildrenStorage&,T>;
 
-				private:
-					friend class Element;
-
-					explicit NodePtr(NodeContainer nodes,size_t offset) noexcept:
-						r_nodes(nodes),m_offset(offset)
-						{assert(offset < nodes.size());}
-
-					NodeContainer r_nodes;
-					size_t m_offset;
-				};
+			template<class T>
+			using NodePtrConst=NodePtrImpl<const ChildrenStorage&,T>;
 
 			explicit Element(const std::string& name):m_tag(name)
 				{}
@@ -61,7 +54,7 @@ namespace SoXN
 			auto create(T&& content)
 				{
 				append(std::forward<T>(content));
-				return NodePtr<ChildrenStorage&,T>(m_children,m_children.size() - 1);
+				return NodePtr<T>(m_children,m_children.size() - 1);
 				}
 
 
@@ -129,8 +122,27 @@ namespace SoXN
 
 		private:
 			Tag m_tag;
-			typedef std::vector<NodeModel> ChildrenStorage;
 			ChildrenStorage m_children;
+
+			template<class NodeContainer,class T>
+			class NodePtrImpl
+				{
+				public:
+					T& operator*() noexcept
+						{return r_nodes[m_offset].template getAs<T>();}
+					T* operator->() noexcept
+						{return &r_nodes[m_offset].template getAs<T>();}
+
+				private:
+					friend class Element;
+
+					explicit NodePtrImpl(NodeContainer nodes,size_t offset) noexcept:
+						r_nodes(nodes),m_offset(offset)
+						{assert(offset < nodes.size());}
+
+					NodeContainer r_nodes;
+					size_t m_offset;
+				};
 		};
 	}
 

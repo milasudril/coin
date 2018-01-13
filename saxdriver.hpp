@@ -18,6 +18,9 @@ namespace SoXN
 			explicit SAXDriver(EventHandler&& eh):r_eh(eh)
 				{}
 
+			explicit SAXDriver(EventHandler& eh):r_eh(eh)
+				{}
+
 			void operator()(const SoXN::Token& token)
 				{
 				switch(token.type)
