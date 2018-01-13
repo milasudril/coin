@@ -19,7 +19,6 @@ namespace SoXN
 		public:
 			typedef Node<Element,std::string> NodeModel;
 			typedef std::pair<std::string,std::string> Attribute;
-			typedef std::vector<NodeModel> ChildrenStorage;
 
 			template<class NodeContainer,class T>
 			class NodePtr
@@ -150,6 +149,7 @@ namespace SoXN
 		private:
 			std::string m_name;
 			std::map<std::string,std::string> m_attribs;
+			typedef std::vector<NodeModel> ChildrenStorage;
 			ChildrenStorage m_children;
 		};
 	}

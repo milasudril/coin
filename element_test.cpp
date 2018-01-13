@@ -34,14 +34,12 @@ int main()
 
 	SoXN::Element test_b("html");
 
-	test_b.create(SoXN::Element("head"))
-		->create(SoXN::Element("meta"))
-			->attributeAdd("charset","UTF-8");
-	/*		.parent()
-		->createAndAppend(SoXN::Element("title"))
-			->append("Hello, World")
-			.append(" More stuff")
-			.parent();*/
+	auto head=test_b.create(SoXN::Element("head"));
+	head->create(SoXN::Element("meta"))
+		->attributeAdd("charset","UTF-8");
+
+	head->create(SoXN::Element("title"))
+		->append("Hello, World").append(" More stuff");
 
 	show(test_b);
 
