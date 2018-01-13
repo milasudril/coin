@@ -9,22 +9,20 @@
 
 namespace SoXN
 	{
-	template<class ElementType,class StringType>
+	template<class ElementModel,class StringModel>
 	class Node //[Upgrade lang C++17]: variant
 		{
 		public:
 			enum class Type{Element, String};
-			typedef ElementType element_type;
-			typedef StringType string_type;
 
 			auto type() const noexcept
 				{return m_type;}
 
-			explicit Node(const StringType& leaf):m_type(Type::String)
-				{m_string=new StringType(leaf);}
+			explicit Node(const StringModel& leaf):m_type(Type::String)
+				{m_string=new StringModel(leaf);}
 
-			explicit Node(const ElementType& e):m_type(Type::Element)
-				{m_element=new ElementType(e);}
+			explicit Node(const ElementModel& e):m_type(Type::Element)
+				{m_element=new ElementModel(e);}
 
 			Node(const Node& node)
 				{
@@ -32,10 +30,10 @@ namespace SoXN
 				switch(node.type())
 					{
 					case Type::Element:
-						m_element=new ElementType(*node.m_element);
+						m_element=new ElementModel(*node.m_element);
 						break;
 					case Type::String:
-						m_string=new StringType(*node.m_string);
+						m_string=new StringModel(*node.m_string);
 						break;
 					}
 				}
@@ -86,8 +84,8 @@ namespace SoXN
 			Type m_type;
 			union
 				{
-				ElementType* m_element;
-				StringType* m_string;
+				ElementModel* m_element;
+				StringModel* m_string;
 				};
 
 			template<class T,bool dummy=0>
@@ -95,7 +93,7 @@ namespace SoXN
 				{};
 
 			template<bool dummy>
-			struct GetAs<ElementType,dummy>
+			struct GetAs<ElementModel,dummy>
 				{
 				static auto& get(Node& node) noexcept
 					{return *node.m_element;}
@@ -105,7 +103,7 @@ namespace SoXN
 				};
 
 			template<bool dummy>
-			struct GetAs<StringType,dummy>
+			struct GetAs<StringModel,dummy>
 				{
 				static auto& get(Node& node) noexcept
 					{return *node.m_string;}
