@@ -16,12 +16,15 @@ namespace SoXN
 		,AttributeValue
 		,AttributeValueLast
 		,EndOfFile
+		,Error
 		};
 
 	struct Token
 		{
 		std::string value;
 		TokenType type;
+		int row;
+		int col;
 		};
 
 	template<class Stream,class OutputPolicy>
@@ -32,6 +35,8 @@ namespace SoXN
 		auto state_current=State::BodyText;
 		auto state_old=state_current;
 		Token tok;
+		tok.row=1;
+		tok.col=1;
 		while(true)
 			{
 			auto ch_in=getc(stream);
@@ -40,6 +45,13 @@ namespace SoXN
 				output(Token{"",TokenType::EndOfFile});
 				return;
 				}
+
+			if(ch_in=='\n')
+				{
+				tok.col=0;
+				++tok.row;
+				}
+ 			++tok.col;
 
 			switch(state_current)
 				{
