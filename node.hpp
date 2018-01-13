@@ -19,30 +19,6 @@ namespace SoXN
 			typedef ElementType element_type;
 			typedef StringType string_type;
 
-			template<class T,bool dummy=0>
-			struct GetAs
-				{};
-
-			template<bool dummy>
-			struct GetAs<ElementType,dummy>
-				{
-				static auto& get(Node& node) noexcept
-					{return *node.m_element;}
-
-				static const auto& get(const Node& node) noexcept
-					{return *node.m_element;}
-				};
-
-			template<bool dummy>
-			struct GetAs<StringType,dummy>
-				{
-				static auto& get(Node& node) noexcept
-					{return *node.m_string;}
-
-				static const auto& get(const Node& node) noexcept
-					{return *node.m_string;}
-				};
-
 			auto type() const noexcept
 				{return m_type;}
 
@@ -114,6 +90,30 @@ namespace SoXN
 				{
 				ElementType* m_element;
 				StringType* m_string;
+				};
+
+			template<class T,bool dummy=0>
+			struct GetAs
+				{};
+
+			template<bool dummy>
+			struct GetAs<ElementType,dummy>
+				{
+				static auto& get(Node& node) noexcept
+					{return *node.m_element;}
+
+				static const auto& get(const Node& node) noexcept
+					{return *node.m_element;}
+				};
+
+			template<bool dummy>
+			struct GetAs<StringType,dummy>
+				{
+				static auto& get(Node& node) noexcept
+					{return *node.m_string;}
+
+				static const auto& get(const Node& node) noexcept
+					{return *node.m_string;}
 				};
 		};
 	}
