@@ -119,7 +119,7 @@ namespace
 					{
 					case SoXN::TokenType::TagNameNoAttributes:
 						m_tag_stack.push(m_tag_current);
-						if(token.value=="-")
+						if(token.value=="")
 							{
 							m_tag_current=m_tag_prev; //Restore previous tag
 							outputBegin(m_tag_prev);

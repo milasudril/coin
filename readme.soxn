@@ -40,9 +40,9 @@
 				{p:{strong:Reason:} It looks ugly and is redundant}
 			}
 			{:{p:Element start markers must be escaped, also where they are not used as part of the syntax:}
-				{:{strong:Legal:}   {code:\{foo@\\\{bar}=\\\{hello:}}}}
+				{:{strong:Legal:}   {code:\{foo@\\\{bar\}=\\\{hello:\\\}\}}:}
 				{:{strong:Illegal:} {code:\{foo@\{bar\}=\{hello\}:\}}}
-				{:{strong:Reason:} It should mean that a new element begins within the attribute list, which is not possible.}
+				{:{strong:Reason:} It would have meant that a new element begins within the attribute list, which is not possible.}
 			}
 			{:{p:An empty element must have a content separator. This means that the following is illegal:}
 				{pre:\{foo\}}
