@@ -1,7 +1,7 @@
 //@	{"targets":[{"name":"soxn2xml","type":"application","cxxoptions":{"cxxversion_min":201402}}]}
 
 #include <cstdio>
-#include "treebuilder.hpp"
+#include "saxdriver.hpp"
 #include "tokenizer.hpp"
 #include <string>
 #include <stack>
@@ -75,6 +75,6 @@ class XMLWriter
 
 int main()
 	{
-	SoXN::tokenize(stdin,SoXN::TreeBuilder<XMLWriter>{XMLWriter()});
+	SoXN::tokenize(stdin,SoXN::SAXDriver<XMLWriter>{XMLWriter()});
 	return 0;
 	}
