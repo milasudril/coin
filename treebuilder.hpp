@@ -1,3 +1,7 @@
+//@	{
+//@	"targets":[{"name":"treebuilder.hpp","type":"include"}]
+//@	}
+
 #ifndef SOXN_TREEBUILDER_HPP
 #define SOXN_TREEBUILDER_HPP
 
@@ -11,7 +15,7 @@ namespace SoXN
 	class TreeBuilder
 		{
 		public:
-			explicit TreeBuilder(NodeTree& tree):r_tree(tree)
+			explicit TreeBuilder(NodeTree&& tree):r_tree(tree)
 				{}
 
 			void operator()(const SoXN::Token& token)
@@ -23,12 +27,12 @@ namespace SoXN
 						if(token.value=="")
 							{
 							m_tag_current=m_tag_prev; //Restore previous tag
-							outputBegin(m_tag_prev);
+							r_tree.outputBegin(m_tag_prev);
 							}
 						else
 							{
 							m_tag_current=Tag(token.value);
-							outputBegin(m_tag_current);
+							r_tree.outputBegin(m_tag_current);
 							}
 						break;
 
@@ -38,7 +42,7 @@ namespace SoXN
 						break;
 
 					case SoXN::TokenType::BodyText:
-						output(token.value);
+						r_tree.output(token.value);
 						break;
 
 					case SoXN::TokenType::AttributeNameFirst:
@@ -51,20 +55,20 @@ namespace SoXN
 
 					case SoXN::TokenType::AttributeValue:
 						m_attrib.second=token.value;
-						m_tag_current.insert(m_attrib);
+						m_tag_current.attributeAdd(m_attrib);
 						break;
 
 					case SoXN::TokenType::AttributeValueLast:
 						m_attrib.second=token.value;
-						m_tag_current.insert(m_attrib);
-						outputBegin(m_tag_current);
+						m_tag_current.attributeAdd(m_attrib);
+						r_tree.outputBegin(m_tag_current);
 						break;
 
 					case SoXN::TokenType::BodyTextLast:
 						if(m_tag_stack.size()==0)
 							{abort();}
-						output(token.value);
-						outputEnd(m_tag_current);
+						r_tree.output(token.value);
+						r_tree.outputEnd(m_tag_current);
 						m_tag_prev=m_tag_current;
 						m_tag_current=m_tag_stack.top();
 						m_tag_stack.pop();
@@ -82,7 +86,7 @@ namespace SoXN
 			Tag m_tag_prev;
 			Tag m_tag_current;
 			std::stack<Tag> m_tag_stack;
-			Tag::attribute m_attrib;
+			Tag::Attribute m_attrib;
 		};
 	}
 #endif

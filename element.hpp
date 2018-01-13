@@ -106,9 +106,9 @@ namespace SoXN
 			std::string& attributeCreate(const std::string& name)
 				{return m_tag.attributeCreate(name);}
 
-			Element& attributeAdd(const std::string& name,const std::string& value)
+			Element& attributeAdd(const Attribute& attrib)
 				{
-				m_tag.attributeAdd(name,value);
+				m_tag.attributeAdd(attrib);
 				return *this;
 				}
 

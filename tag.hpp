@@ -1,3 +1,7 @@
+//@	{
+//@	"targets":[{"name":"tag.hpp","type":"include"}]
+//@	}
+
 #ifndef SOXN_TAG_HPP
 #define SOXN_TAG_HPP
 
@@ -71,9 +75,9 @@ namespace SoXN
 				return ip.first->second;
 				}
 
-			Tag& attributeAdd(const std::string& name,const std::string& value)
+			Tag& attributeAdd(const Attribute& attrib)
 				{
-				auto ip=m_attribs.insert({name,value});
+				auto ip=m_attribs.insert(attrib);
 				if(!ip.second)
 					{abort();}
 				return *this;

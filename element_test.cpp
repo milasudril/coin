@@ -36,7 +36,7 @@ int main()
 
 	auto head=test_b.create(SoXN::Element("head"));
 	head->create(SoXN::Element("meta"))
-		->attributeAdd("charset","UTF-8");
+		->attributeAdd({"charset","UTF-8"});
 
 	head->create(SoXN::Element("title"))
 		->append("Hello, World").append(" More stuff");
