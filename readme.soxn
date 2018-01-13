@@ -32,7 +32,7 @@
 
 		{h2:Rules for writing SoXN documents}
 
-		{p:While SoXN is quite liberal, there are some (artificial) rules that must be followed, in order for a SoXN document to be valid.}
+		{p:While SoXN is quite liberal, there are some rules that must be followed, in order for a SoXN document to be valid.}
 
 		{ul:
 			{li:{p:An attribute list cannot be empty. This means that the following is illegal:}

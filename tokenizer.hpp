@@ -16,7 +16,6 @@ namespace SoXN
 		,AttributeValue
 		,AttributeValueLast
 		,EndOfFile
-		,Error
 		};
 
 	struct Token
@@ -27,8 +26,21 @@ namespace SoXN
 		int col;
 		};
 
-	template<class Stream,class OutputPolicy>
-	void tokenize(Stream& stream,OutputPolicy&& output)
+	struct LogAndAbort
+		{
+		void operator()(const Token& tok,const char* message)
+			{
+			fprintf(stderr,"%d:%d: %s\n", tok.row, tok.col, message);
+			abort();
+			}
+		};
+
+	template<class Stream,class OutputFunction>
+	void tokenize(Stream& stream,OutputFunction&& output)
+		{tokenize(stream,std::forward<OutputFunction>(output),LogAndAbort{});}
+
+	template<class Stream,class OutputFunction,class ErrorHandler>
+	void tokenize(Stream& stream,OutputFunction&& output,ErrorHandler&& err)
 		{
 		enum class State:int{BodyText,Escape,TagName,AttributeList,AttributeName,AttributeValue};
 
@@ -87,7 +99,10 @@ namespace SoXN
 				case State::TagName:
 					switch(ch_in)
 						{
-					//TODO: Currently, literal '}' is allowed in tag names. It should be interpreted as the sequence  ":}"
+						case '}':
+						case '{':
+							err(tok, "Element begin/end markers must be escaped in element names.");
+							return;
 						case ':':
 							tok.type=TokenType::TagNameNoAttributes;
 							output(tok);
@@ -114,10 +129,13 @@ namespace SoXN
 				case State::AttributeList:
 					switch(ch_in)
 						{
-					//TODO: Currently, literal '}' is allowed in tag names. It is probably better to claim it is an error.
-						case ':': //TODO: Should empty attribute list be allowed?
-							state_current=State::BodyText;
-							break;
+						case '}':
+						case '{':
+							err(tok, "Element begin/end markers must be escaped in attribute names.");
+							return;
+						case ':':
+							err(tok, "Attribute lists cannot be empty.");
+							return;
 						case '\\':
 							state_old=state_current;
 							state_current=State::Escape;
@@ -131,7 +149,10 @@ namespace SoXN
 				case State::AttributeName:
 					switch(ch_in)
 						{
-					//TODO: Currently, literal '}' is allowed in attribute names. It is probably better to claim it is an error.
+						case '}':
+						case '{':
+							err(tok, "Element begin/end markers must be escaped in attribute names.");
+							return;
 						case '=':
 							output(tok);
 							tok.value.clear();
@@ -150,7 +171,10 @@ namespace SoXN
 				case State::AttributeValue:
 					switch(ch_in)
 						{
-					//TODO: Currently, literal '}' is allowed in attribute values. It is probably better to claim it is an error.
+						case '}':
+						case '{':
+							err(tok, "Element begin/end marker must be escaped in attribute values.");
+							return;
 						case ':':
 							tok.type=TokenType::AttributeValueLast;
 							output(tok);
