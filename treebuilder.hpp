@@ -5,7 +5,7 @@
 #ifndef SOXN_TREEBUILDER_HPP
 #define SOXN_TREEBUILDER_HPP
 
-#include "tokenizer.hpp"
+#include "token.hpp"
 #include "tag.hpp"
 #include <stack>
 

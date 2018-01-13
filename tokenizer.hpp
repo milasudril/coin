@@ -1,31 +1,14 @@
-#ifndef SoXN_TOKENIZER_HPP
-#define SoXN_TOKENIZER_HPP
+//@	{
+//@	"targets":[{"name":"tokenizer.hpp","type":"include"}]
+//@	}
 
-#include <string>
+#ifndef SOXN_TOKENIZER_HPP
+#define SOXN_TOKENIZER_HPP
+
+#include "token.hpp"
 
 namespace SoXN
 	{
-	enum class TokenType:int
-		{
-		 BodyText
-		,BodyTextLast
-		,TagName
-		,TagNameNoAttributes
-		,AttributeNameFirst
-		,AttributeName
-		,AttributeValue
-		,AttributeValueLast
-		,EndOfFile
-		};
-
-	struct Token
-		{
-		std::string value;
-		TokenType type;
-		int row;
-		int col;
-		};
-
 	struct LogAndAbort
 		{
 		void operator()(const Token& tok,const char* message)

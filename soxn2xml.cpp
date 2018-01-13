@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include "treebuilder.hpp"
+#include "tokenizer.hpp"
 #include <string>
 #include <stack>
 #include <map>
