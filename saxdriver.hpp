@@ -7,15 +7,16 @@
 
 #include "token.hpp"
 #include "tag.hpp"
+#include "errorpolicy.hpp"
 #include <stack>
 
 namespace SoXN
 	{
-	template<class EventHandler>
+	template<class EventHandler,class ErrorPolicy=LogAndAbort>
 	class SAXDriver
 		{
 		public:
-			explicit SAXDriver(EventHandler&& eh):r_eh(eh)
+			explicit SAXDriver(EventHandler&& eh,ErrorPolicy err=LogAndAbort{}):r_eh(eh)
 				{}
 
 			explicit SAXDriver(EventHandler& eh):r_eh(eh)
@@ -29,19 +30,20 @@ namespace SoXN
 						m_tag_stack.push(m_tag_current);
 						if(token.value=="")
 							{
+							if(!m_tag_prev)
+								{m_err(token, "No previous tag in current context");}
 							m_tag_current=m_tag_prev; //Restore previous tag
-							r_eh.outputBegin(m_tag_prev);
 							}
 						else
-							{
-							m_tag_current=Tag(token.value);
-							r_eh.outputBegin(m_tag_current);
-							}
+							{m_tag_current=Tag(token.value);}
+						m_tag_prev.clear();
+						r_eh.outputBegin(m_tag_current);
 						break;
 
 					case SoXN::TokenType::TagName:
 						m_tag_stack.push(m_tag_current);
 						m_tag_current=Tag(token.value);
+						m_tag_prev.clear();
 						break;
 
 					case SoXN::TokenType::BodyText:
@@ -85,11 +87,12 @@ namespace SoXN
 				}
 
 		private:
-			EventHandler& r_eh;
 			Tag m_tag_prev;
 			Tag m_tag_current;
 			std::stack<Tag> m_tag_stack;
 			Tag::Attribute m_attrib;
+			EventHandler& r_eh;
+			ErrorPolicy m_err;
 		};
 	}
 #endif

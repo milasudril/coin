@@ -83,6 +83,12 @@ namespace SoXN
 				return *this;
 				}
 
+			operator bool() const noexcept
+				{return m_name.size()!=0;}
+
+			void clear()
+				{m_name.clear();}
+
 		private:
 			std::string m_name;
 			std::map<std::string,std::string> m_attribs;

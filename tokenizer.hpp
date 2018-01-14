@@ -6,17 +6,10 @@
 #define SOXN_TOKENIZER_HPP
 
 #include "token.hpp"
+#include "errorpolicy.hpp"
 
 namespace SoXN
 	{
-	struct LogAndAbort
-		{
-		void operator()(const Token& tok,const char* message)
-			{
-			fprintf(stderr,"%d:%d: %s\n", tok.row, tok.col, message);
-			abort();
-			}
-		};
 
 	template<class Stream,class OutputFunction>
 	void tokenize(Stream& stream,OutputFunction&& output)
@@ -25,9 +18,9 @@ namespace SoXN
 	template<class Stream,class OutputFunction,class ErrorHandler>
 	void tokenize(Stream& stream,OutputFunction&& output,ErrorHandler&& err)
 		{
-		enum class State:int{BodyText,Escape,TagName,AttributeList,AttributeName,AttributeValue};
+		enum class State:int{Init,BodyText,Escape,TagName,AttributeList,AttributeName,AttributeValue};
 
-		auto state_current=State::BodyText;
+		auto state_current=State::Init;
 		auto state_old=state_current;
 		Token tok;
 		tok.row=1;
@@ -50,6 +43,18 @@ namespace SoXN
 
 			switch(state_current)
 				{
+				case State::Init:
+					switch(ch_in)
+						{
+						case '{':
+							tok.value.clear();
+							tok.type=TokenType::TagName;
+							state_current=State::TagName;
+							break;
+						default:
+							err(tok,"Expected { at begin of file");
+							return;
+						}
 				case State::BodyText:
 					switch(ch_in)
 						{
