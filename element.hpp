@@ -26,10 +26,10 @@ namespace SoXN
 			typedef Tag::Attribute Attribute;
 
 			template<class T>
-			using NodePtr=NodePtrImpl<ChildrenStorage&,T>;
+			using NodePtr=NodePtrImpl<ChildrenStorage*,T>;
 
 			template<class T>
-			using NodePtrConst=NodePtrImpl<const ChildrenStorage&,T>;
+			using NodePtrConst=NodePtrImpl<const ChildrenStorage*,T>;
 
 			explicit Element(const std::string& name):m_tag(name)
 				{}
@@ -54,7 +54,7 @@ namespace SoXN
 			auto create(T&& content)
 				{
 				append(std::forward<T>(content));
-				return NodePtr<T>(m_children,m_children.size() - 1);
+				return NodePtr<T>(&m_children,m_children.size() - 1);
 				}
 
 
@@ -128,17 +128,25 @@ namespace SoXN
 			class NodePtrImpl
 				{
 				public:
-					T& operator*() noexcept
-						{return r_nodes[m_offset].template getAs<T>();}
-					T* operator->() noexcept
-						{return &r_nodes[m_offset].template getAs<T>();}
+					NodePtrImpl() noexcept:r_nodes(nullptr),m_offset(0){}
+
+					auto& operator*() const noexcept
+						{return (*r_nodes)[m_offset].template getAs<T>();}
+					auto operator->() const noexcept
+						{return &(*r_nodes)[m_offset].template getAs<T>();}
+
+					operator bool() const noexcept
+						{return r_nodes!=nullptr;}
 
 				private:
 					friend class Element;
 
 					explicit NodePtrImpl(NodeContainer nodes,size_t offset) noexcept:
 						r_nodes(nodes),m_offset(offset)
-						{assert(offset < nodes.size());}
+						{
+						assert(nodes!=nullptr);
+						assert(offset < nodes->size());
+						}
 
 					NodeContainer r_nodes;
 					size_t m_offset;
