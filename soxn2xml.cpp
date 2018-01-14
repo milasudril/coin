@@ -51,14 +51,8 @@ class XMLWriter
 				})==str.end();
 			}
 
-		void outputBegin(const SoXN::Tag& tag)
+		void elementBegin(const SoXN::Tag& tag)
 			{
-			if(tag.name()=="!")
-				{
-				printf("<!--"); //This is a comment. Since we just converts the document to XML, keep it.
-				return;
-				}
-
 			if(!nameValid(tag.name()))
 				{abort();}
 			printf("<%s",tag.name().c_str());
@@ -67,17 +61,10 @@ class XMLWriter
 			printf(">");
 			}
 
-		void outputEnd(const SoXN::Tag& tag)
+		void elementEnd(const SoXN::Tag& tag)
 			{
 			if(tag.name()=="")
 				{abort();}
-
-			if(tag.name()=="!")
-				{
-				printf("-->");
-				return;
-				}
-
 			printf("</%s>",tag.name().c_str());
 			}
 	};

@@ -47,7 +47,7 @@ namespace SoXN
 						else
 							{m_tag_current=Tag(token.value);}
 						m_tag_prev.clear();
-						r_eh.outputBegin(m_tag_current);
+						r_eh.elementBegin(m_tag_current);
 						break;
 
 					case SoXN::TokenType::TagName:
@@ -81,7 +81,7 @@ namespace SoXN
 					case SoXN::TokenType::AttributeValueLast:
 						m_attrib.second=token.value;
 						m_tag_current.attributeAdd(m_attrib);
-						r_eh.outputBegin(m_tag_current);
+						r_eh.elementBegin(m_tag_current);
 						break;
 
 					case SoXN::TokenType::BodyTextLast:
@@ -95,7 +95,7 @@ namespace SoXN
 						else
 							{
 							r_eh.output(token.value);
-							r_eh.outputEnd(m_tag_current);
+							r_eh.elementEnd(m_tag_current);
 							m_tag_prev=m_tag_current;
 							}
 						m_tag_current=m_tag_stack.top();

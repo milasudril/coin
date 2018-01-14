@@ -27,7 +27,7 @@ namespace SoXN
 					{r_elem_current->append(str);}
 				}
 
-			void outputBegin(const SoXN::Tag& tag)
+			void elementBegin(const SoXN::Tag& tag)
 				{
 				m_elems_out.push(r_elem_current);
 				if(!r_elem_current)
@@ -36,7 +36,7 @@ namespace SoXN
 					{r_elem_current=r_elem_current->create(Element(tag));}
 				}
 
-			void outputEnd(const SoXN::Tag& tag)
+			void elementEnd(const SoXN::Tag& tag)
 				{
 				auto temp=m_elems_out.top();
 				m_elems_out.pop();
