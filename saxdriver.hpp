@@ -28,10 +28,20 @@ namespace SoXN
 					{
 					case SoXN::TokenType::TagNameNoAttributes:
 						m_tag_stack.push(m_tag_current);
+						if(token.value=="!")
+							{
+							m_tag_current=Tag(token.value);
+							r_eh.commentBegin();
+							break;
+							}
+
 						if(token.value=="")
 							{
 							if(!m_tag_prev)
-								{m_err(token, "No previous tag in current context.");}
+								{
+								m_err(token, "No previous tag in current context.");
+								return;
+								}
 							m_tag_current=m_tag_prev; //Restore previous tag
 							}
 						else
@@ -41,6 +51,11 @@ namespace SoXN
 						break;
 
 					case SoXN::TokenType::TagName:
+						if(token.value=="!")
+							{
+							m_err(token, "Comments cannot have attributes.");
+							return;
+							}
 						m_tag_stack.push(m_tag_current);
 						m_tag_current=Tag(token.value);
 						m_tag_prev.clear();
@@ -71,17 +86,25 @@ namespace SoXN
 
 					case SoXN::TokenType::BodyTextLast:
 						if(m_tag_stack.size()==0)
-							{abort();}
-						r_eh.output(token.value);
-						r_eh.outputEnd(m_tag_current);
-						m_tag_prev=m_tag_current;
+							{
+							m_err(token, "No element here to end.");
+							return;
+							}
+						if(m_tag_current.name()=="!")
+							{r_eh.commentEnd(token.value);}
+						else
+							{
+							r_eh.output(token.value);
+							r_eh.outputEnd(m_tag_current);
+							m_tag_prev=m_tag_current;
+							}
 						m_tag_current=m_tag_stack.top();
 						m_tag_stack.pop();
 						break;
 
 					case SoXN::TokenType::EndOfFile:
 						if(m_tag_stack.size()!=0)
-							{abort();}
+							{m_err(token, "Some tags were left open.");}
 						break;
 					}
 				}

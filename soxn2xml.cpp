@@ -11,6 +11,15 @@
 class XMLWriter
 	{
 	public:
+		void commentBegin()
+			{printf("<!--");}
+
+		void commentEnd(const std::string& str)
+			{
+			output(str);
+			printf("-->");
+			}
+
 		void output(const std::string& str)
 			{
 			std::for_each(str.begin(),str.end(),[](char ch_out)

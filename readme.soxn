@@ -1,3 +1,4 @@
+{!:This file demonstrates the SoXN file format}
 {html:
 	{head:
 		{meta@charset=UTF-8:}
@@ -9,6 +10,7 @@
 
 		{table:
 			{tr:{th:XML}{:SoXN}}
+			{!:A tag name can be ommited to repeat the previous tag in the same level. Comments do not affect the previous tag.}
 			{:{td:{code:<element>content</element>}}                               {:{code:\{element:{var:content}\}}}}
 			{:{td:{code:<element foo="a" bar="b">content</element>}}               {:{code:\{element@foo=a;bar=b:{var:content}\}}}}
 			{:{td:{code:<element />}}                                              {:{code:\{element:\}}}}

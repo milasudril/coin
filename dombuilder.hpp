@@ -17,6 +17,10 @@ namespace SoXN
 			DOMBuilder():m_elem_current("root")
 				{}
 
+			void commentBegin(){}
+
+			void commentEnd(const std::string& str){}
+
 			void output(const std::string& str)
 				{
 				if(r_elem_current)

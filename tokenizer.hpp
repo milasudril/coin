@@ -55,6 +55,8 @@ namespace SoXN
 							err(tok,"Expected { at begin of file.");
 							return;
 						}
+					break;
+
 				case State::BodyText:
 					switch(ch_in)
 						{
