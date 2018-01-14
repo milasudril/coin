@@ -21,8 +21,10 @@ namespace SoXN
 			explicit SAXDriver(EventHandler& eh):r_eh(eh)
 				{}
 
+			enum ProcessStatus:int{NoError,DocumentEnd,Error};
+
 			template<class ErrorPolicy>
-			void operator()(const SoXN::Token& token,ErrorPolicy& err)
+			__attribute__((warn_unused_result)) ProcessStatus operator()(const SoXN::Token& token,ErrorPolicy& err)
 				{
 				switch(token.type)
 					{
@@ -32,7 +34,7 @@ namespace SoXN
 							{
 							m_tag_current=Tag(token.value);
 							r_eh.commentBegin();
-							break;
+							return ProcessStatus::NoError;
 							}
 
 						if(token.value=="")
@@ -40,7 +42,7 @@ namespace SoXN
 							if(!m_tag_prev)
 								{
 								err(token, "No previous tag in current context.");
-								return;
+								return ProcessStatus::Error;
 								}
 							m_tag_current=m_tag_prev; //Restore previous tag
 							}
@@ -48,62 +50,62 @@ namespace SoXN
 							{m_tag_current=Tag(token.value);}
 						m_tag_prev.clear();
 						r_eh.elementBegin(m_tag_current);
-						break;
+						return ProcessStatus::NoError;
 
 					case SoXN::TokenType::TagName:
 						if(token.value=="!")
 							{
 							err(token, "Comments cannot have attributes.");
-							return;
+							return ProcessStatus::Error;
 							}
 						m_tag_stack.push(m_tag_current);
 						m_tag_current=Tag(token.value);
 						m_tag_prev.clear();
-						break;
+						return ProcessStatus::NoError;
 
 					case SoXN::TokenType::BodyText:
 						if(m_tag_stack.size()==0 && token.value.size()!=0)
 							{
 							err(token, "Body text must be written within an element.");
-							return;
+							return ProcessStatus::Error;
 							}
 						r_eh.output(token.value);
-						break;
+						return ProcessStatus::NoError;
 
 					case SoXN::TokenType::AttributeNameFirst:
 						if(token.value.size()==0)
 							{
 							err(token, "An attribute name cannot be empty.");
-							return;
+							return ProcessStatus::Error;
 							}
 						m_attrib.first=token.value;
-						break;
+						return ProcessStatus::NoError;
 
 					case SoXN::TokenType::AttributeName:
 						if(token.value.size()==0)
 							{
 							err(token, "An attribute name cannot be empty.");
-							return;
+							return ProcessStatus::Error;
 							}
 						m_attrib.first=token.value;
-						break;
+						return ProcessStatus::NoError;
 
 					case SoXN::TokenType::AttributeValue:
 						m_attrib.second=token.value;
 						m_tag_current.attributeAdd(m_attrib);
-						break;
+						return ProcessStatus::NoError;
 
 					case SoXN::TokenType::AttributeValueLast:
 						m_attrib.second=token.value;
 						m_tag_current.attributeAdd(m_attrib);
 						r_eh.elementBegin(m_tag_current);
-						break;
+						return ProcessStatus::NoError;
 
 					case SoXN::TokenType::BodyTextLast:
 						if(m_tag_stack.size()==0)
 							{
 							err(token, "No element here to end.");
-							return;
+							return ProcessStatus::Error;
 							}
 						if(m_tag_current.name()=="!")
 							{r_eh.commentEnd(token.value);}
@@ -112,16 +114,22 @@ namespace SoXN
 							r_eh.output(token.value);
 							r_eh.elementEnd(m_tag_current);
 							m_tag_prev=m_tag_current;
+							if(m_tag_stack.size()==1)
+								{return ProcessStatus::DocumentEnd;}
 							}
 						m_tag_current=m_tag_stack.top();
 						m_tag_stack.pop();
-						break;
+						return ProcessStatus::NoError;
 
 					case SoXN::TokenType::EndOfFile:
 						if(m_tag_stack.size()!=0)
-							{err(token, "Some tags were left open.");}
-						break;
+							{
+							err(token, "Some tags were left open.");
+							return ProcessStatus::Error;
+							}
+						return ProcessStatus::DocumentEnd;
 					}
+				return ProcessStatus::Error;
 				}
 
 		private:

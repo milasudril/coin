@@ -7,31 +7,49 @@
 
 #include "token.hpp"
 #include "errorpolicy.hpp"
+#include "saxdriver.hpp"
+#include <cassert>
 
 namespace SoXN
 	{
-
 	template<class Stream,class OutputFunction>
 	void tokenize(Stream& stream,OutputFunction&& output)
 		{tokenize(stream,std::forward<OutputFunction>(output),LogAndAbort{});}
 
+	enum ParseResult:int{NoError,MoreData,Error};
+
 	template<class Stream,class OutputFunction,class ErrorHandler>
-	void tokenize(Stream& stream,OutputFunction&& output,ErrorHandler&& err)
+	ParseResult tokenize(Stream& stream,SAXDriver<OutputFunction>&& output,ErrorHandler&& err)
 		{
 		enum class State:int{Init,BodyText,Escape,TagName,AttributeList,AttributeName,AttributeValue};
-
+		auto status=SAXDriver<OutputFunction>::ProcessStatus::NoError;
+		typedef decltype(status) ProcessStatus;
 		auto state_current=State::Init;
 		auto state_old=state_current;
+
+		auto keepGoing=[](ProcessStatus status)
+			{
+			typedef decltype(status) ProcessStatus;
+			switch(status)
+				{
+				case ProcessStatus::NoError: return true;
+				case ProcessStatus::DocumentEnd: return false;
+				case ProcessStatus::Error: return false;
+				}
+			assert(false);
+			};
+
 		Token tok;
 		tok.row=1;
 		tok.col=0;
-		while(true)
+		while(keepGoing(status))
 			{
 			auto ch_in=getc(stream);
 			if(feof(stream))
 				{
-				output(Token{"",TokenType::EndOfFile}, err);
-				return;
+				status=output(Token{"",TokenType::EndOfFile}, err);
+				assert(status!=ProcessStatus::NoError);
+				return status==ProcessStatus::DocumentEnd? ParseResult::NoError : ParseResult::Error;
 				}
 
 			if(ch_in=='\n')
@@ -53,7 +71,7 @@ namespace SoXN
 							break;
 						default:
 							err(tok,"Expected { at begin of file.");
-							return;
+							return ParseResult::Error;
 						}
 					break;
 
@@ -62,14 +80,14 @@ namespace SoXN
 						{
 						case '{':
 							tok.type=TokenType::BodyText;
-							output(tok,err);
+							status=output(tok,err);
 							tok.value.clear();
 							tok.type=TokenType::TagName;
 							state_current=State::TagName;
 							break;
 						case '}':
 							tok.type=TokenType::BodyTextLast;
-							output(tok,err);
+							status=output(tok,err);
 							tok.value.clear();
 							break;
 						case '\\':
@@ -92,10 +110,10 @@ namespace SoXN
 						case '}':
 						case '{':
 							err(tok, "Element begin/end markers must be escaped in element names.");
-							return;
+							return ParseResult::Error;
 						case ':':
 							tok.type=TokenType::TagNameNoAttributes;
-							output(tok,err);
+							status=output(tok,err);
 							tok.value.clear();
 							tok.type=TokenType::BodyText;
 							state_current=State::BodyText;
@@ -106,7 +124,7 @@ namespace SoXN
 							break;
 						case '@':
 							tok.type=TokenType::TagName;
-							output(tok,err);
+							status=output(tok,err);
 							tok.value.clear();
 							tok.type=TokenType::AttributeNameFirst;
 							state_current=State::AttributeList;
@@ -122,10 +140,10 @@ namespace SoXN
 						case '}':
 						case '{':
 							err(tok, "Element begin/end markers must be escaped in attribute names.");
-							return;
+							return ParseResult::Error;
 						case ':':
 							err(tok, "Attribute lists cannot be empty.");
-							return;
+							return ParseResult::Error;
 						case '\\':
 							state_old=state_current;
 							state_current=State::Escape;
@@ -141,13 +159,13 @@ namespace SoXN
 						{
 						case ':':
 							err(tok, "Empty attributes are not allowed.");
-							return;
+							return ParseResult::Error;
 						case '}':
 						case '{':
 							err(tok, "Element begin/end markers must be escaped in attribute names.");
-							return;
+							return ParseResult::Error;
 						case '=':
-							output(tok,err);
+							status=output(tok,err);
 							tok.value.clear();
 							tok.type=TokenType::AttributeValue;
 							state_current=State::AttributeValue;
@@ -167,16 +185,16 @@ namespace SoXN
 						case '}':
 						case '{':
 							err(tok, "Element begin/end marker must be escaped in attribute values.");
-							return;
+							return ParseResult::Error;
 						case ':':
 							tok.type=TokenType::AttributeValueLast;
-							output(tok,err);
+							status=output(tok,err);
 							tok.value.clear();
 							tok.type=TokenType::BodyText;
 							state_current=State::BodyText;
 							break;
 						case ';':
-							output(tok,err);
+							status=output(tok,err);
 							tok.value.clear();
 							tok.type=TokenType::AttributeName;
 							state_current=State::AttributeName;
@@ -191,6 +209,8 @@ namespace SoXN
 					break;
 				}
 			}
+		assert(status!=ProcessStatus::NoError);
+		return status==ProcessStatus::DocumentEnd? ParseResult::MoreData : ParseResult::NoError;
 		}
 	}
 
