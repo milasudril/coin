@@ -7,22 +7,22 @@
 
 #include "token.hpp"
 #include "tag.hpp"
-#include "errorpolicy.hpp"
 #include <stack>
 
 namespace SoXN
 	{
-	template<class EventHandler,class ErrorPolicy=LogAndAbort>
+	template<class EventHandler>
 	class SAXDriver
 		{
 		public:
-			explicit SAXDriver(EventHandler&& eh,ErrorPolicy err=LogAndAbort{}):r_eh(eh)
+			explicit SAXDriver(EventHandler&& eh):r_eh(eh)
 				{}
 
 			explicit SAXDriver(EventHandler& eh):r_eh(eh)
 				{}
 
-			void operator()(const SoXN::Token& token)
+			template<class ErrorPolicy>
+			void operator()(const SoXN::Token& token,ErrorPolicy& err)
 				{
 				switch(token.type)
 					{
@@ -39,7 +39,7 @@ namespace SoXN
 							{
 							if(!m_tag_prev)
 								{
-								m_err(token, "No previous tag in current context.");
+								err(token, "No previous tag in current context.");
 								return;
 								}
 							m_tag_current=m_tag_prev; //Restore previous tag
@@ -53,7 +53,7 @@ namespace SoXN
 					case SoXN::TokenType::TagName:
 						if(token.value=="!")
 							{
-							m_err(token, "Comments cannot have attributes.");
+							err(token, "Comments cannot have attributes.");
 							return;
 							}
 						m_tag_stack.push(m_tag_current);
@@ -87,7 +87,7 @@ namespace SoXN
 					case SoXN::TokenType::BodyTextLast:
 						if(m_tag_stack.size()==0)
 							{
-							m_err(token, "No element here to end.");
+							err(token, "No element here to end.");
 							return;
 							}
 						if(m_tag_current.name()=="!")
@@ -104,7 +104,7 @@ namespace SoXN
 
 					case SoXN::TokenType::EndOfFile:
 						if(m_tag_stack.size()!=0)
-							{m_err(token, "Some tags were left open.");}
+							{err(token, "Some tags were left open.");}
 						break;
 					}
 				}
@@ -115,7 +115,6 @@ namespace SoXN
 			std::stack<Tag> m_tag_stack;
 			Tag::Attribute m_attrib;
 			EventHandler& r_eh;
-			ErrorPolicy m_err;
 		};
 	}
 #endif

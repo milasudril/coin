@@ -53,8 +53,8 @@ namespace SoXN
 			std::stack<Element::NodePtr<Element>> m_elems_out;
 		};
 
-	template<class InputStream>
-	inline Element load(InputStream stream)
+	template<class InputStream,class ErrorPolicy=LogAndAbort>
+	inline Element load(InputStream stream,ErrorPolicy&& err=LogAndAbort{})
 		{
 		DOMBuilder builder;
 		tokenize(stream,SAXDriver<DOMBuilder>(builder));

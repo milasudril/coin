@@ -30,7 +30,7 @@ namespace SoXN
 			auto ch_in=getc(stream);
 			if(feof(stream))
 				{
-				output(Token{"",TokenType::EndOfFile});
+				output(Token{"",TokenType::EndOfFile}, err);
 				return;
 				}
 
@@ -62,14 +62,14 @@ namespace SoXN
 						{
 						case '{':
 							tok.type=TokenType::BodyText;
-							output(tok);
+							output(tok,err);
 							tok.value.clear();
 							tok.type=TokenType::TagName;
 							state_current=State::TagName;
 							break;
 						case '}':
 							tok.type=TokenType::BodyTextLast;
-							output(tok);
+							output(tok,err);
 							tok.value.clear();
 							break;
 						case '\\':
@@ -95,7 +95,7 @@ namespace SoXN
 							return;
 						case ':':
 							tok.type=TokenType::TagNameNoAttributes;
-							output(tok);
+							output(tok,err);
 							tok.value.clear();
 							tok.type=TokenType::BodyText;
 							state_current=State::BodyText;
@@ -106,7 +106,7 @@ namespace SoXN
 							break;
 						case '@':
 							tok.type=TokenType::TagName;
-							output(tok);
+							output(tok,err);
 							tok.value.clear();
 							tok.type=TokenType::AttributeNameFirst;
 							state_current=State::AttributeList;
@@ -147,7 +147,7 @@ namespace SoXN
 							err(tok, "Element begin/end markers must be escaped in attribute names.");
 							return;
 						case '=':
-							output(tok);
+							output(tok,err);
 							tok.value.clear();
 							tok.type=TokenType::AttributeValue;
 							state_current=State::AttributeValue;
@@ -170,13 +170,13 @@ namespace SoXN
 							return;
 						case ':':
 							tok.type=TokenType::AttributeValueLast;
-							output(tok);
+							output(tok,err);
 							tok.value.clear();
 							tok.type=TokenType::BodyText;
 							state_current=State::BodyText;
 							break;
 						case ';':
-							output(tok);
+							output(tok,err);
 							tok.value.clear();
 							tok.type=TokenType::AttributeName;
 							state_current=State::AttributeName;
