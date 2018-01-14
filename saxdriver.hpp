@@ -31,7 +31,7 @@ namespace SoXN
 						if(token.value=="")
 							{
 							if(!m_tag_prev)
-								{m_err(token, "No previous tag in current context");}
+								{m_err(token, "No previous tag in current context.");}
 							m_tag_current=m_tag_prev; //Restore previous tag
 							}
 						else

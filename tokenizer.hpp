@@ -52,7 +52,7 @@ namespace SoXN
 							state_current=State::TagName;
 							break;
 						default:
-							err(tok,"Expected { at begin of file");
+							err(tok,"Expected { at begin of file.");
 							return;
 						}
 				case State::BodyText:
@@ -137,6 +137,9 @@ namespace SoXN
 				case State::AttributeName:
 					switch(ch_in)
 						{
+						case ':':
+							err(tok, "Empty attributes are not allowed.");
+							return;
 						case '}':
 						case '{':
 							err(tok, "Element begin/end markers must be escaped in attribute names.");
