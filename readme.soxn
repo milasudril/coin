@@ -1,5 +1,4 @@
-{!:This file demonstrates the SoXN file format}
-{html:
+{!:This file demonstrates the SoXN file format}{root:More than one root?!}{html:
 	{head:
 		{meta@charset=UTF-8:}
 		{title:SoXN: Shorthand Xml Notation}
@@ -40,6 +39,7 @@
 				{pre:\{foo@:\}}
 				{p:{strong:Reason:} It looks ugly and is redundant}
 			}
+			{li:An attribute name must not be empty}
 			{:{p:Element begin and end markers must be escaped, also where they are not used as part of the syntax i.e. within tags:}
 				{:{strong:Legal:}   {code:\{foo@\\\{bar\\\}=\\\{hello\\\}:\}}}
 				{:{strong:Illegal:} {code:\{foo@\{bar\}=\{hello\}:\}}}

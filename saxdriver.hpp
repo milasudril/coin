@@ -62,14 +62,29 @@ namespace SoXN
 						break;
 
 					case SoXN::TokenType::BodyText:
+						if(m_tag_stack.size()==0 && token.value.size()!=0)
+							{
+							err(token, "Body text must be written within an element.");
+							return;
+							}
 						r_eh.output(token.value);
 						break;
 
 					case SoXN::TokenType::AttributeNameFirst:
+						if(token.value.size()==0)
+							{
+							err(token, "An attribute name cannot be empty.");
+							return;
+							}
 						m_attrib.first=token.value;
 						break;
 
 					case SoXN::TokenType::AttributeName:
+						if(token.value.size()==0)
+							{
+							err(token, "An attribute name cannot be empty.");
+							return;
+							}
 						m_attrib.first=token.value;
 						break;
 

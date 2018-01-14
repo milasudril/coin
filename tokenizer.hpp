@@ -24,7 +24,7 @@ namespace SoXN
 		auto state_old=state_current;
 		Token tok;
 		tok.row=1;
-		tok.col=1;
+		tok.col=0;
 		while(true)
 			{
 			auto ch_in=getc(stream);
