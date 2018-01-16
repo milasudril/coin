@@ -28,7 +28,7 @@
 		{h2:Compatiblity notes}
 		{p:By construction, SoXN syntax allows for arbitrary tag and attribute names. It is however good practice to keep tag and attribute names valid XML. A future reference implementation may issue a warning when a name would not be valid XML.}
 
-		{p:This implementation does not do any whitespace normailzation. One reason for this is that no whitespace character is ever used as token delimiter. Another reason is that it implies that a set of rules must be written, and also it may introduce some limitation on the storage capabilites: In particular: In SoXN there is no problem to store a newline character inside an attribtue.}
+		{p:Whitespaces at begin of an input file are ignored. Otherwise, this implementation does not do any whitespace normailzation. One reason for this is that no whitespace character is ever used as token delimiter. Another reason is that it implies that a set of rules must be written, and also it may introduce some limitation on the storage capabilites: In particular: In SoXN there is no problem to store a newline character inside an attribtue.}
 
 		{h2:Rules for writing SoXN documents}
 

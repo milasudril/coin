@@ -12,11 +12,11 @@
 
 namespace SoXN
 	{
-	template<class Stream,class OutputFunction>
-	void tokenize(Stream& stream,OutputFunction&& output)
-		{tokenize(stream,std::forward<OutputFunction>(output),LogAndAbort{});}
-
 	enum ParseResult:int{NoError,MoreData,Error};
+
+	template<class Stream,class OutputFunction>
+	ParseResult tokenize(Stream& stream,OutputFunction&& output)
+		{return tokenize(stream,std::forward<OutputFunction>(output),LogAndAbort{});}
 
 	template<class Stream,class OutputFunction,class ErrorHandler>
 	ParseResult tokenize(Stream& stream,SAXDriver<OutputFunction>&& output,ErrorHandler&& err)
@@ -70,8 +70,11 @@ namespace SoXN
 							state_current=State::TagName;
 							break;
 						default:
-							err(tok,"Expected { at begin of file.");
-							return ParseResult::Error;
+							if(!(ch_in>=0 && ch_in<=' '))
+								{
+								err(tok,"Expected { at begin of file.");
+								return ParseResult::Error;
+								}
 						}
 					break;
 

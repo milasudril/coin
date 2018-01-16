@@ -19,7 +19,15 @@ static void show(const SoXN::Element& element)
 
 int main()
 	{
-	auto element=SoXN::load(stdin);
-	show(element);
-
+	auto status=SoXN::ParseResult::MoreData;
+	while(status==SoXN::ParseResult::MoreData)
+		{
+		SoXN::Element element;
+		status=SoXN::load(stdin,element);
+		if(status==SoXN::ParseResult::Error)
+			{return -1;}
+		if(element)
+			{show(element);}
+		}
+	return 0;
 	}

@@ -31,6 +31,8 @@ namespace SoXN
 			template<class T>
 			using NodePtrConst=NodePtrImpl<const ChildrenStorage*,T>;
 
+			Element()=default;
+
 			explicit Element(const std::string& name):m_tag(name)
 				{}
 
@@ -42,6 +44,9 @@ namespace SoXN
 
 			const std::string& name() const noexcept
 				{return m_tag.name();}
+
+			operator bool() const noexcept
+				{return m_tag.name().size()!=0;}
 
 			template<class T>
 			Element& append(T&& content)
