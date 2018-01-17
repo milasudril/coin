@@ -9,6 +9,72 @@
 
 namespace SoXN
 	{
+	namespace detail
+		{
+		template<class Stream>
+		void writeXMLName(const std::string& str,Stream& stream)
+			{
+			auto ptr=str.data();
+			auto ch_in=*ptr;
+			while(ch_in)
+				{
+			//	TODO: validate ch_in before writing it to stream
+				putc(ch_in,stream);
+				++ptr;
+				ch_in=*ptr;
+				}
+			}
+
+		template<class Stream>
+		void writeXMLAttribValue(const std::string& str,Stream& stream)
+			{
+			auto ptr=str.data();
+			auto ch_in=*ptr;
+			while(ch_in)
+				{
+				switch(ch_in)
+					{
+					case '&':
+						fputs("&amp;",stream);
+						break;
+					case '"':
+						fputs("&quote;",stream);
+						break;
+					default:
+						putc(ch_in,stream);
+					}
+				++ptr;
+				ch_in=*ptr;
+				}
+			}
+
+		template<class Stream>
+		void writeXMLBodyText(const std::string& str,Stream& stream)
+			{
+			auto ptr=str.data();
+			auto ch_in=*ptr;
+			while(ch_in)
+				{
+				switch(ch_in)
+					{
+					case '<':
+						fputs("&lt;",stream);
+						break;
+					case '>':
+						fputs("&gt;",stream);
+						break;
+					case '&':
+						fputs("&amp;",stream);
+						break;
+					default:
+						putc(ch_in,stream);
+					}
+				++ptr;
+				ch_in=*ptr;
+				}
+			}
+		}
+
 	template<class Stream>
 	class XMLWriter
 		{
@@ -19,13 +85,13 @@ namespace SoXN
 			void writeBeginTag(const Tag& tag)
 				{
 				putc('<',r_stream);
-				fputs(tag.name().c_str(),r_stream);
+				detail::writeXMLName(tag.name(),r_stream);
 				tag.visitAttributes([this](const auto& attribute)
 					{
 					putc(' ',r_stream);
-					fputs(attribute.first.c_str(),r_stream);
+					detail::writeXMLName(attribute.first,r_stream);
 					fputs("=\"",r_stream);
-					fputs(attribute.second.c_str(),r_stream);
+					detail::writeXMLAttribValue(attribute.second,r_stream);
 					putc('"',r_stream);
 					});
 				putc('>',r_stream);
@@ -34,12 +100,12 @@ namespace SoXN
 			void writeEndTag(const Tag& tag)
 				{
 				fputs("</",r_stream);
-				fputs(tag.name().c_str(),r_stream);
+				detail::writeXMLName(tag.name(),r_stream);
 				putc('>',r_stream);
 				}
 
 			void writeBodyText(const std::string& string)
-				{fputs(string.c_str(),r_stream);}
+				{detail::writeXMLBodyText(string.c_str(),r_stream);}
 
 		private:
 			Stream& r_stream;
