@@ -2,19 +2,24 @@
 
 #include <cstdio>
 #include "dombuilder.hpp"
+#include "xmlwriter.hpp"
 
-static void show(const std::string& str)
-	{printf("%s",str.c_str());}
+static void show(const std::string& str, SoXN::XMLWriter<FILE*>& writer)
+	{writer.writeBodyText(str);}
 
-static void show(const SoXN::Element& element)
+static void show(const SoXN::Element& element, SoXN::XMLWriter<FILE*>& writer)
 	{
-	printf("<%s",element.name().c_str());
+	writer.writeBeginTag(element.tag());
+	element.visitChildren([&writer](const auto& node)
+		{show(node,writer);});
+	writer.writeEndTag(element.tag());
+
+/*	printf("<%s",element.name().c_str());
 	element.visitAttributes([](const auto& attrib)
 		{printf(" %s=\"%s\"",attrib.first.c_str(),attrib.second.c_str());});
 	printf(">");
-	element.visitChildren([](const auto& node)
-		{show(node);});
-	printf("</%s>",element.name().c_str());
+
+	printf("</%s>",element.name().c_str());*/
 	}
 
 int main()
@@ -27,7 +32,10 @@ int main()
 		if(status==SoXN::ParseResult::Error)
 			{return -1;}
 		if(element)
-			{show(element);}
+			{
+			SoXN::XMLWriter<FILE*> writer(stdout);
+			show(element,writer);
+			}
 		}
 	return 0;
 	}

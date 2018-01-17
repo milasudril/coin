@@ -45,6 +45,9 @@ namespace SoXN
 			const std::string& name() const noexcept
 				{return m_tag.name();}
 
+			const Tag& tag() const noexcept
+				{return m_tag;}
+
 			operator bool() const noexcept
 				{return m_tag.name().size()!=0;}
 
