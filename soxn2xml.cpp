@@ -1,16 +1,17 @@
-//@	{"targets":[{"name":"soxn2xml","type":"application","cxxoptions":{"cxxversion_min":201402}}]}
+//@	{"targets":[{"name":"soxn2xml","type":"application"}]}
 
 #include <cstdio>
 #include "saxdriver.hpp"
 #include "tokenizer.hpp"
-#include <string>
-#include <stack>
-#include <map>
-#include <algorithm>
+#include "xmlwriter.hpp"
 
-class XMLWriter
+template<class Writer>
+class DirectOutput
 	{
 	public:
+		explicit DirectOutput(Writer& writer):r_writer(writer)
+			{}
+
 		void commentBegin()
 			{printf("<!--");}
 
@@ -21,56 +22,22 @@ class XMLWriter
 			}
 
 		void output(const std::string& str)
-			{
-			std::for_each(str.begin(),str.end(),[](char ch_out)
-				{
-				switch(ch_out)
-					{
-					case '<':
-						printf("&lt;");
-						break;
-					case '>':
-						printf("&gt;");
-						break;
-					case '&':
-						printf("&amp;");
-						break;
-					default:
-						putchar(ch_out);
-					}
-				});
-			}
-
-		bool nameValid(const std::string& str)
-			{
-			return std::find_if(str.begin(),str.end(),[](char ch_check)
-				{
-			//	For now, only check stuff that would lead to syntactical issues
-				return ch_check=='<' || ch_check=='>' || ch_check=='"' || ch_check=='=' || ch_check=='/'
-					|| (ch_check>='\0' && ch_check<=' ');
-				})==str.end();
-			}
+			{r_writer.writeBodyText(str);}
 
 		void elementBegin(const SoXN::Tag& tag)
-			{
-			if(!nameValid(tag.name()))
-				{abort();}
-			printf("<%s",tag.name().c_str());
-			tag.visitAttributes([](const auto& attrib)
-				{printf(" %s=\"%s\"",attrib.first.c_str(),attrib.second.c_str());});
-			printf(">");
-			}
+			{r_writer.writeBeginTag(tag);}
 
 		void elementEnd(const SoXN::Tag& tag)
-			{
-			if(tag.name()=="")
-				{abort();}
-			printf("</%s>",tag.name().c_str());
-			}
+			{r_writer.writeEndTag(tag);}
+
+	private:
+		Writer& r_writer;
 	};
 
 int main()
 	{
-	SoXN::tokenize(stdin,SoXN::SAXDriver<XMLWriter>{XMLWriter()});
+	SoXN::XMLWriter<FILE*> writer(stdout);
+	DirectOutput<decltype(writer)> direct_out(writer);
+	SoXN::tokenize(stdin,SoXN::SAXDriver<DirectOutput<decltype(writer)>>{direct_out});
 	return 0;
 	}
