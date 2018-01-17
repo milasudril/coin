@@ -160,6 +160,19 @@ namespace SoXN
 					size_t m_offset;
 				};
 		};
+
+	template<class Writer>
+	void write(const std::string& str, Writer&& writer)
+		{writer.writeBodyText(str);}
+
+	template<class Writer>
+	void write(const SoXN::Element& element, Writer&& writer)
+		{
+		writer.writeBeginTag(element.tag());
+		element.visitChildren([&writer](const auto& node)
+			{write(node, writer);});
+		writer.writeEndTag(element.tag());
+		}
 	}
 
 #endif
