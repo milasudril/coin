@@ -163,15 +163,15 @@ namespace SoXN
 
 	template<class Writer>
 	void write(const std::string& str, Writer&& writer)
-		{writer.writeBodyText(str);}
+		{writer.output(str);}
 
 	template<class Writer>
 	void write(const SoXN::Element& element, Writer&& writer)
 		{
-		writer.writeBeginTag(element.tag());
+		writer.elementBegin(element.tag());
 		element.visitChildren([&writer](const auto& node)
 			{write(node, writer);});
-		writer.writeEndTag(element.tag());
+		writer.elementEnd(element.tag());
 		}
 	}
 

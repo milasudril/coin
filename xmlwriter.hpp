@@ -82,7 +82,16 @@ namespace SoXN
 			explicit XMLWriter(Stream& stream):r_stream(stream)
 				{fputs("<?xml version=\"1.0\"?>",r_stream);}
 
-			void writeBeginTag(const Tag& tag)
+			void commentBegin()
+				{fputs("<!--",r_stream);}
+
+			void commentEnd(const std::string& str)
+				{
+				output(str);
+				fputs("-->",r_stream);
+				}
+
+			void elementBegin(const Tag& tag)
 				{
 				putc('<',r_stream);
 				detail::writeXMLName(tag.name(),r_stream);
@@ -97,14 +106,14 @@ namespace SoXN
 				putc('>',r_stream);
 				}
 
-			void writeEndTag(const Tag& tag)
+			void elementEnd(const Tag& tag)
 				{
 				fputs("</",r_stream);
 				detail::writeXMLName(tag.name(),r_stream);
 				putc('>',r_stream);
 				}
 
-			void writeBodyText(const std::string& string)
+			void output(const std::string& string)
 				{detail::writeXMLBodyText(string.c_str(),r_stream);}
 
 		private:
