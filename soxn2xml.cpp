@@ -4,7 +4,7 @@
 #include "saxdriver.hpp"
 #include "tokenizer.hpp"
 #include "xmlwriter.hpp"
-
+#include "lexer_soxn.hpp"
 
 int main()
 	{

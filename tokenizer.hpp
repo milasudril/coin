@@ -8,7 +8,6 @@
 #include "token.hpp"
 #include "errorpolicy.hpp"
 #include "saxdriver.hpp"
-#include "lexer_soxn.hpp"
 #include <cassert>
 
 namespace SoXN
