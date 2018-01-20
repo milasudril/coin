@@ -56,11 +56,11 @@ namespace SoXN
 			Element& r_element_out;
 		};
 
-	template<class InputStream,class ErrorPolicy=LogAndAbort>
-	inline ParseResult load(InputStream stream,Element& element,ErrorPolicy&& err=LogAndAbort{})
+	template<class InputStream,class Lexer,class ErrorPolicy=LogAndAbort>
+	inline ParseResult load(InputStream&& stream,Lexer&& lexer,Element& element,ErrorPolicy&& err=LogAndAbort{})
 		{
 		DOMBuilder builder(element);
-		return tokenize(stream,SAXDriver<DOMBuilder>(builder));
+		return tokenize(std::forward<InputStream>(stream),std::forward<Lexer>(lexer),SAXDriver<DOMBuilder>(builder));
 		}
 	}
 

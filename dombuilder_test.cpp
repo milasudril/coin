@@ -10,7 +10,7 @@ int main()
 	while(status==SoXN::ParseResult::MoreData)
 		{
 		SoXN::Element element;
-		status=SoXN::load(stdin,element);
+		status=SoXN::load(stdin,SoXN::LexerSoXN{},element);
 		if(status==SoXN::ParseResult::Error)
 			{return -1;}
 		if(element)

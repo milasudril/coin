@@ -15,8 +15,9 @@ namespace SoXN
 	{
 	enum class ParseResult:int{NoError,MoreData,Error};
 
-	template<class Stream,class OutputFunction,class ErrorHandler=LogAndAbort>
-	ParseResult tokenize(Stream& stream,SAXDriver<OutputFunction>&& output,ErrorHandler&& err=LogAndAbort{})
+	template<class Stream,class Lexer,class OutputFunction,class ErrorHandler=LogAndAbort>
+	ParseResult tokenize(Stream& stream,Lexer&& lexer,SAXDriver<OutputFunction>&& output
+		,ErrorHandler&& err=LogAndAbort{})
 		{
 		auto status=ProcessStatus::NoError;
 		typedef decltype(status) ProcessStatus;
@@ -32,8 +33,6 @@ namespace SoXN
 				}
 			assert(false);
 			};
-
-		LexerSoXN lexer;
 
 		Token tok;
 		tok.row=1;

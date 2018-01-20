@@ -9,6 +9,6 @@
 int main()
 	{
 	SoXN::XMLWriter<FILE*> writer(stdout);
-	SoXN::tokenize(stdin, SoXN::SAXDriver<SoXN::XMLWriter<FILE*>>{writer});
+	SoXN::tokenize(stdin, SoXN::LexerSoXN{}, SoXN::SAXDriver<SoXN::XMLWriter<FILE*>>{writer});
 	return 0;
 	}
