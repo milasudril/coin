@@ -23,7 +23,7 @@ namespace CoIN
 				{}
 
 			template<class ErrorPolicy>
-			__attribute__((warn_unused_result)) ProcessStatus operator()(const CoIN::Token& token,ErrorPolicy& err)
+			__attribute__((warn_unused_result)) ProcessStatus operator()(const CoIN::Token& token,ErrorPolicy&& err)
 				{
 				switch(token.type)
 					{
@@ -31,7 +31,7 @@ namespace CoIN
 						m_tag_stack.push(m_tag_current);
 						if(token.value=="!")
 							{
-							m_tag_current=Tag(token.value);
+							m_tag_current=Tag(token.value,token.row,token.col,err);
 							r_output.commentBegin();
 							return ProcessStatus::NoError;
 							}
@@ -46,7 +46,7 @@ namespace CoIN
 							m_tag_current=m_tag_prev; //Restore previous tag
 							}
 						else
-							{m_tag_current=Tag(token.value);}
+							{m_tag_current=Tag(token.value,token.row,token.col,err);}
 						m_tag_prev.clear();
 						r_output.elementBegin(m_tag_current);
 						return ProcessStatus::NoError;
@@ -58,7 +58,7 @@ namespace CoIN
 							return ProcessStatus::Error;
 							}
 						m_tag_stack.push(m_tag_current);
-						m_tag_current=Tag(token.value);
+						m_tag_current=Tag(token.value,token.row,token.col,err);
 						m_tag_prev.clear();
 						return ProcessStatus::NoError;
 
@@ -91,12 +91,12 @@ namespace CoIN
 
 					case CoIN::TokenType::AttributeValue:
 						m_attrib.second=token.value;
-						m_tag_current.attributeAdd(m_attrib);
+						m_tag_current.attributeAdd(m_attrib,err);
 						return ProcessStatus::NoError;
 
 					case CoIN::TokenType::AttributeValueLast:
 						m_attrib.second=token.value;
-						m_tag_current.attributeAdd(m_attrib);
+ 						m_tag_current.attributeAdd(m_attrib,err);
 						r_output.elementBegin(m_tag_current);
 						return ProcessStatus::NoError;
 
