@@ -1,4 +1,4 @@
-//@	{"targets":[{"name":"dombuilder_test","type":"application","cxxoptions":{"cxxversion_min":201402}}]}
+//@	{"targets":[{"name":"dombuilder_test","type":"application"}]}
 
 #include "dombuilder.hpp"
 #include "xmlwriter.hpp"
