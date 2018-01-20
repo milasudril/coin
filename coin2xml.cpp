@@ -2,7 +2,7 @@
 
 #include "input.hpp"
 #include "xmlwriter.hpp"
-#include "lexer_coin.hpp"
+#include "lexercoin.hpp"
 
 int main()
 	{

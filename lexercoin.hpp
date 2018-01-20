@@ -1,9 +1,9 @@
-//@{"targets":[{"name":"lexer_coin.hpp","type":"include"}]}
+//@{"targets":[{"name":"lexercoin.hpp","type":"include"}]}
 
 #ifndef COIN_LEXERCOIN_HPP
 #define COIN_LEXERCOIN_HPP
 
-#include "process_status.hpp"
+#include "processstatus.hpp"
 #include <cassert>
 
 
