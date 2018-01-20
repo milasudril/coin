@@ -18,12 +18,8 @@ namespace CoIN
 
 			Tag()=default;
 
-			explicit Tag(const std::string& name)
-				{
-				if(name=="")
-					{abort();}
-				m_name=name;
-				}
+			explicit Tag(const std::string& name, int row=0, int col=0):m_name(name),m_row(row),m_col(col)
+				{}
 
 			explicit Tag(std::string&& name)
 				{
@@ -87,11 +83,22 @@ namespace CoIN
 				{return m_name.size()!=0;}
 
 			void clear()
-				{m_name.clear();}
+				{
+				m_name.clear();
+				m_attribs.clear();
+				}
+
+			int row() const noexcept
+				{return m_row;}
+
+			int col() const noexcept
+				{return m_col;}
 
 		private:
 			std::string m_name;
 			std::map<std::string,std::string> m_attribs;
+			int m_row;
+			int m_col;
 		};
 	}
 #endif
