@@ -33,13 +33,12 @@ namespace CoIN
 
 			Element()=default;
 
-			explicit Element(const std::string& name):m_tag(name)
+			template<class ErrorPolicy=ErrorPolicyDefault_>
+			explicit Element(const std::string& name,ErrorPolicy&& err=ErrorPolicyDefault_{}):
+				m_tag(name,0,0,std::forward<ErrorPolicy>(err))
 				{}
 
 			explicit Element(const Tag& tag):m_tag(tag)
-				{}
-
-			explicit Element(std::string&& name):m_tag(std::move(name))
 				{}
 
 			const std::string& name() const noexcept
@@ -97,19 +96,22 @@ namespace CoIN
 			auto childCount() const
 				{return m_children.size();}
 
+			template<class ErrorPolicy=ErrorPolicyDefault_>
+			const std::string& attribute(const std::string& name,ErrorPolicy&& err=ErrorPolicyDefault_{}) const
+				{return m_tag.attribute(name,std::forward<ErrorPolicy>(err));}
 
-			const std::string& attribute(const std::string& name) const
-				{return m_tag.attribute(name);}
+			template<class ErrorPolicy=ErrorPolicyDefault_>
+			std::string& attribute(const std::string& name,ErrorPolicy&& err=ErrorPolicyDefault_{})
+				{return m_tag.attribute(name,std::forward<ErrorPolicy>(err));}
 
-			std::string& attribute(const std::string& name)
-				{return m_tag.attribute(name);}
+			template<class ErrorPolicy=ErrorPolicyDefault_>
+			std::string& attributeCreate(const std::string& name,ErrorPolicy&& err=ErrorPolicyDefault_{})
+				{return m_tag.attributeCreate(name,std::forward<ErrorPolicy>(err));}
 
-			std::string& attributeCreate(const std::string& name)
-				{return m_tag.attributeCreate(name);}
-
-			Element& attributeAdd(const Attribute& attrib)
+			template<class ErrorPolicy=ErrorPolicyDefault_>
+			Element& attributeAdd(const Attribute& attrib,ErrorPolicy&& err=ErrorPolicyDefault_{})
 				{
-				m_tag.attributeAdd(attrib);
+				m_tag.attributeAdd(attrib,std::forward<ErrorPolicy>(err));
 				return *this;
 				}
 

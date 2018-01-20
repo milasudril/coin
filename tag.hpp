@@ -27,14 +27,6 @@ namespace CoIN
 					{err(*this, "Tag names must not be empty");}
 				}
 
-			template<class ErrorPolicy=ErrorPolicyDefault_>
-			explicit Tag(std::string&& name, int row=0, int col=0,ErrorPolicy&& err=ErrorPolicyDefault_{})
-				{
-				m_name=std::move(name);
-				if(m_name=="")
-					{err(*this, "Tag names must not be empty");}
-				}
-
 			const std::string& name() const
 				{return m_name;}
 
