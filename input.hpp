@@ -14,8 +14,8 @@ namespace CoIN
 	{
 	enum class ParseResult:int{NoError,MoreData,Error};
 
-	template<class Stream,class Lexer,class OutputFunction,class ErrorHandler=LogAndAbort>
-	ParseResult read(Stream&& stream,Lexer&& lexer,OutputFunction&& parser_output,ErrorHandler&& err=LogAndAbort{})
+	template<class Stream,class Lexer,class OutputFunction,class ErrorHandler=ErrorPolicyDefault_>
+	ParseResult read(Stream&& stream,Lexer&& lexer,OutputFunction&& parser_output,ErrorHandler&& err=ErrorPolicyDefault_{})
 		{
 		auto status=ProcessStatus::NoError;
 		typedef decltype(status) ProcessStatus;

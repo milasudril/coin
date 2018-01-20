@@ -1,6 +1,5 @@
 //@	{"targets":[{"name":"dombuilder_test","type":"application","cxxoptions":{"cxxversion_min":201402}}]}
 
-#include <cstdio>
 #include "dombuilder.hpp"
 #include "xmlwriter.hpp"
 #include "lexer_coin.hpp"

@@ -1,6 +1,5 @@
 //@	{"targets":[{"name":"coin2xml","type":"application"}]}
 
-#include <cstdio>
 #include "input.hpp"
 #include "xmlwriter.hpp"
 #include "lexer_coin.hpp"

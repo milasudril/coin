@@ -55,8 +55,8 @@ namespace CoIN
 			Element& r_element_out;
 		};
 
-	template<class InputStream,class Lexer,class ErrorPolicy=LogAndAbort>
-	inline ParseResult load(InputStream&& stream,Lexer&& lexer,Element& element,ErrorPolicy&& err=LogAndAbort{})
+	template<class InputStream,class Lexer,class ErrorPolicy=ErrorPolicyDefault_>
+	inline ParseResult load(InputStream&& stream,Lexer&& lexer,Element& element,ErrorPolicy&& err=ErrorPolicyDefault_{})
 		{
 		return read(std::forward<InputStream>(stream),std::forward<Lexer>(lexer),DOMBuilder(element)
 			,std::forward<ErrorPolicy>(err));

@@ -10,6 +10,8 @@
 
 namespace CoIN
 	{
+	struct ErrorPolicyDefault;
+
 	struct LogAndAbort
 		{
 		template<class Location>
@@ -19,6 +21,9 @@ namespace CoIN
 			abort();
 			}
 		};
+
+	typedef std::conditional<std::is_destructible<ErrorPolicyDefault>::value
+		,ErrorPolicyDefault, LogAndAbort>::type ErrorPolicyDefault_;
 	}
 
 #endif

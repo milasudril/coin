@@ -19,16 +19,16 @@ namespace CoIN
 
 			Tag()=default;
 
-			template<class ErrorPolicy=LogAndAbort>
-			explicit Tag(const std::string& name, int row=0, int col=0,ErrorPolicy&& err=LogAndAbort{}):
+			template<class ErrorPolicy=ErrorPolicyDefault_>
+			explicit Tag(const std::string& name, int row=0, int col=0,ErrorPolicy&& err=ErrorPolicyDefault_{}):
 				m_name(name),m_row(row),m_col(col)
 				{
 				if(m_name=="")
 					{err(*this, "Tag names must not be empty");}
 				}
 
-			template<class ErrorPolicy=LogAndAbort>
-			explicit Tag(std::string&& name, int row=0, int col=0,ErrorPolicy&& err=LogAndAbort{})
+			template<class ErrorPolicy=ErrorPolicyDefault_>
+			explicit Tag(std::string&& name, int row=0, int col=0,ErrorPolicy&& err=ErrorPolicyDefault_{})
 				{
 				m_name=std::move(name);
 				if(m_name=="")
@@ -53,8 +53,8 @@ namespace CoIN
 				}
 
 
-			template<class ErrorPolicy=LogAndAbort>
-			const std::string& attribute(const std::string& name,ErrorPolicy&& err=LogAndAbort{}) const
+			template<class ErrorPolicy=ErrorPolicyDefault_>
+			const std::string& attribute(const std::string& name,ErrorPolicy&& err=ErrorPolicyDefault_{}) const
 				{
 				auto i=m_attribs.find(name);
 				if(i==m_attribs.end())
@@ -62,8 +62,8 @@ namespace CoIN
 				return i->second;
 				}
 
-			template<class ErrorPolicy=LogAndAbort>
-			std::string& attribute(const std::string& name,ErrorPolicy&& err=LogAndAbort{})
+			template<class ErrorPolicy=ErrorPolicyDefault_>
+			std::string& attribute(const std::string& name,ErrorPolicy&& err=ErrorPolicyDefault_{})
 				{
 				auto i=m_attribs.find(name);
 				if(i==m_attribs.end())
@@ -71,8 +71,8 @@ namespace CoIN
 				return i->second;
 				}
 
-			template<class ErrorPolicy=LogAndAbort>
-			std::string& attributeCreate(const std::string& name,ErrorPolicy&& err=LogAndAbort{})
+			template<class ErrorPolicy=ErrorPolicyDefault_>
+			std::string& attributeCreate(const std::string& name,ErrorPolicy&& err=ErrorPolicyDefault_{})
 				{
 				auto ip=m_attribs.insert({name,""});
 				if(!ip.second)
@@ -80,8 +80,8 @@ namespace CoIN
 				return ip.first->second;
 				}
 
-			template<class ErrorPolicy=LogAndAbort>
-			Tag& attributeAdd(const Attribute& attrib,ErrorPolicy&& err=LogAndAbort{})
+			template<class ErrorPolicy=ErrorPolicyDefault_>
+			Tag& attributeAdd(const Attribute& attrib,ErrorPolicy&& err=ErrorPolicyDefault_{})
 				{
 				auto ip=m_attribs.insert(attrib);
 				if(!ip.second)
