@@ -2,14 +2,14 @@
 //@	"targets":[{"name":"dombuilder.hpp","type":"include"}]
 //@	}
 
-#ifndef SOXN_DOMBUILDER_HPP
-#define SOXN_DOMBUILDER_HPP
+#ifndef COIN_DOMBUILDER_HPP
+#define COIN_DOMBUILDER_HPP
 
 #include "saxdriver.hpp"
 #include "tokenizer.hpp"
 #include "element.hpp"
 
-namespace SoXN
+namespace CoIN
 	{
 	class DOMBuilder
 		{
@@ -27,7 +27,7 @@ namespace SoXN
 					{r_elem_current->append(str);}
 				}
 
-			void elementBegin(const SoXN::Tag& tag)
+			void elementBegin(const CoIN::Tag& tag)
 				{
 				m_elems_out.push(r_elem_current);
 				if(r_elem_current)
@@ -36,7 +36,7 @@ namespace SoXN
 					{r_elem_current=m_elem_current.create(Element(tag));}
 				}
 
-			void elementEnd(const SoXN::Tag& tag)
+			void elementEnd(const CoIN::Tag& tag)
 				{
 				auto temp=m_elems_out.top();
 				m_elems_out.pop();

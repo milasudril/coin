@@ -2,15 +2,15 @@
 //@	"targets":[{"name":"element.hpp","type":"include"}]
 //@	}
 
-#ifndef SOXN_ELEMENT_HPP
-#define SOXN_ELEMENT_HPP
+#ifndef COIN_ELEMENT_HPP
+#define COIN_ELEMENT_HPP
 
 #include "node.hpp"
 #include "tag.hpp"
 #include <vector>
 #include <cassert>
 
-namespace SoXN
+namespace CoIN
 	{
 	class Element
 		{
@@ -166,7 +166,7 @@ namespace SoXN
 		{writer.output(str);}
 
 	template<class Writer>
-	void write(const SoXN::Element& element, Writer&& writer)
+	void write(const CoIN::Element& element, Writer&& writer)
 		{
 		writer.elementBegin(element.tag());
 		element.visitChildren([&writer](const auto& node)

@@ -2,10 +2,10 @@
 //@	"targets":[{"name":"errorpolicy.hpp","type":"include"}]
 //@	}
 
-#ifndef SOXN_ERRORPOLICY_HPP
-#define SOXN_ERRORPOLICY_HPP
+#ifndef COIN_ERRORPOLICY_HPP
+#define COIN_ERRORPOLICY_HPP
 
-namespace SoXN
+namespace CoIN
 	{
 	struct LogAndAbort
 		{

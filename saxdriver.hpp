@@ -2,15 +2,15 @@
 //@	"targets":[{"name":"saxdriver.hpp","type":"include"}]
 //@	}
 
-#ifndef SOXN_SAXDRIVER_HPP
-#define SOXN_SAXDRIVER_HPP
+#ifndef COIN_SAXDRIVER_HPP
+#define COIN_SAXDRIVER_HPP
 
 #include "token.hpp"
 #include "tag.hpp"
 #include "process_status.hpp"
 #include <stack>
 
-namespace SoXN
+namespace CoIN
 	{
 	template<class EventHandler>
 	class SAXDriver
@@ -23,11 +23,11 @@ namespace SoXN
 				{}
 
 			template<class ErrorPolicy>
-			__attribute__((warn_unused_result)) ProcessStatus operator()(const SoXN::Token& token,ErrorPolicy& err)
+			__attribute__((warn_unused_result)) ProcessStatus operator()(const CoIN::Token& token,ErrorPolicy& err)
 				{
 				switch(token.type)
 					{
-					case SoXN::TokenType::TagNameNoAttributes:
+					case CoIN::TokenType::TagNameNoAttributes:
 						m_tag_stack.push(m_tag_current);
 						if(token.value=="!")
 							{
@@ -51,7 +51,7 @@ namespace SoXN
 						r_eh.elementBegin(m_tag_current);
 						return ProcessStatus::NoError;
 
-					case SoXN::TokenType::TagName:
+					case CoIN::TokenType::TagName:
 						if(token.value=="!")
 							{
 							err(token, "Comments cannot have attributes.");
@@ -62,7 +62,7 @@ namespace SoXN
 						m_tag_prev.clear();
 						return ProcessStatus::NoError;
 
-					case SoXN::TokenType::BodyText:
+					case CoIN::TokenType::BodyText:
 						if(m_tag_stack.size()==0 && token.value.size()!=0)
 							{
 							err(token, "Body text must be written within an element.");
@@ -71,7 +71,7 @@ namespace SoXN
 						r_eh.output(token.value);
 						return ProcessStatus::NoError;
 
-					case SoXN::TokenType::AttributeNameFirst:
+					case CoIN::TokenType::AttributeNameFirst:
 						if(token.value.size()==0)
 							{
 							err(token, "An attribute name cannot be empty.");
@@ -80,7 +80,7 @@ namespace SoXN
 						m_attrib.first=token.value;
 						return ProcessStatus::NoError;
 
-					case SoXN::TokenType::AttributeName:
+					case CoIN::TokenType::AttributeName:
 						if(token.value.size()==0)
 							{
 							err(token, "An attribute name cannot be empty.");
@@ -89,18 +89,18 @@ namespace SoXN
 						m_attrib.first=token.value;
 						return ProcessStatus::NoError;
 
-					case SoXN::TokenType::AttributeValue:
+					case CoIN::TokenType::AttributeValue:
 						m_attrib.second=token.value;
 						m_tag_current.attributeAdd(m_attrib);
 						return ProcessStatus::NoError;
 
-					case SoXN::TokenType::AttributeValueLast:
+					case CoIN::TokenType::AttributeValueLast:
 						m_attrib.second=token.value;
 						m_tag_current.attributeAdd(m_attrib);
 						r_eh.elementBegin(m_tag_current);
 						return ProcessStatus::NoError;
 
-					case SoXN::TokenType::BodyTextLast:
+					case CoIN::TokenType::BodyTextLast:
 						if(m_tag_stack.size()==0)
 							{
 							err(token, "No element here to end.");
@@ -120,7 +120,7 @@ namespace SoXN
 						m_tag_stack.pop();
 						return ProcessStatus::NoError;
 
-					case SoXN::TokenType::EndOfFile:
+					case CoIN::TokenType::EndOfFile:
 						if(m_tag_stack.size()!=0)
 							{
 							err(token, "Some tags were left open.");

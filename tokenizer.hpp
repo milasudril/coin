@@ -2,15 +2,15 @@
 //@	"targets":[{"name":"tokenizer.hpp","type":"include"}]
 //@	}
 
-#ifndef SOXN_TOKENIZER_HPP
-#define SOXN_TOKENIZER_HPP
+#ifndef COIN_TOKENIZER_HPP
+#define COIN_TOKENIZER_HPP
 
 #include "token.hpp"
 #include "errorpolicy.hpp"
 #include "saxdriver.hpp"
 #include <cassert>
 
-namespace SoXN
+namespace CoIN
 	{
 	enum class ParseResult:int{NoError,MoreData,Error};
 

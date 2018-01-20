@@ -1,14 +1,14 @@
-{!:This file demonstrates the SoXN file format}{html:
+{!:This file demonstrates the CoIN file format}{html:
 	{head:
 		{meta@charset=UTF-8:}
-		{title:SoXN: Shorthand Xml Notation}
+		{title:CoIN: Compact Infoset Notation}
 	}
 	{body:
-		{h1:Shorthand Xml Notation}
-		{p:Shorthand Xml Notation, or SoXN, is a way of writing XML-like documents in a more compact form. SoXN allows smaller, and more readable XML files to be written, while maintaining similar markup features. The following table shows a comparison between SoXN and XML.}
+		{h1:Compact Infoset Notation}
+		{p:Compact Infoset Notation, or CoIN, is a way of writing XML-like documents in a more compact form. CoIN allows smaller, and more readable XML files to be written, while maintaining similar markup features. The following table shows a comparison between CoIN and XML.}
 
 		{table:
-			{tr:{th:XML}{:SoXN}}
+			{tr:{th:XML}{:CoIN}}
 			{!:A tag name can be ommited to repeat the previous tag in the same level. Comments do not affect the previous tag.}
 			{:{td:{code:<element>content</element>}}                               {:{code:\{element:{var:content}\}}}}
 			{:{td:{code:<element foo="a" bar="b">content</element>}}               {:{code:\{element@foo=a;bar=b:{var:content}\}}}}
@@ -21,18 +21,18 @@
 			{:{td:Stylesheet or DTD references}                                    {:Feature not present}}
 		}
 
-		{p:There are three differences between SoXN and XML that is worth mentioning. Firstly, SoXN uses braces as tag markers instead of < and >. Also, SoXN takes advantage of the fact that a "well formed" document must not have interleaved elements, and uses an end brace to terminate the current element. The content of the element is written between {code::} and the end brace ({code:\}}). This results in smaller, and less verbose documents. The third difference is that SoXN uses a general escape mechanism instead of various escape constructs.}
+		{p:There are three differences between CoIN and XML that is worth mentioning. Firstly, CoIN uses braces as tag markers instead of < and >. Also, CoIN takes advantage of the fact that a "well formed" document must not have interleaved elements, and uses an end brace to terminate the current element. The content of the element is written between {code::} and the end brace ({code:\}}). This results in smaller, and less verbose documents. The third difference is that CoIN uses a general escape mechanism instead of various escape constructs.}
 
-		{p:Not repeating the element name for the end tag saves some space. In SoXN, it is also possible to use element repetiotion, in case the previous tag is identical (this includes its name {em:and} its attributes) to the current tag.}
+		{p:Not repeating the element name for the end tag saves some space. In CoIN, it is also possible to use element repetiotion, in case the previous tag is identical (this includes its name {em:and} its attributes) to the current tag.}
 
 		{h2:Compatiblity notes}
-		{p:By construction, SoXN syntax allows for arbitrary tag and attribute names. It is however good practice to keep tag and attribute names valid XML. A future reference implementation may issue a warning when a name would not be valid XML.}
+		{p:By construction, CoIN syntax allows for arbitrary tag and attribute names. It is however good practice to keep tag and attribute names valid XML. A future reference implementation may issue a warning when a name would not be valid XML.}
 
-		{p:Whitespaces at begin of an input file are ignored. Otherwise, this implementation does not do any whitespace normailzation. One reason for this is that no whitespace character is ever used as token delimiter. Another reason is that it implies that a set of rules must be written, and also it may introduce some limitation on the storage capabilites: In particular: In SoXN there is no problem to store a newline character inside an attribtue.}
+		{p:Whitespaces at begin of an input file are ignored. Otherwise, this implementation does not do any whitespace normailzation. One reason for this is that no whitespace character is ever used as token delimiter. Another reason is that it implies that a set of rules must be written, and also it may introduce some limitation on the storage capabilites: In particular: In CoIN there is no problem to store a newline character inside an attribtue.}
 
-		{h2:Rules for writing SoXN documents}
+		{h2:Rules for writing CoIN documents}
 
-		{p:While SoXN is quite liberal, there are some rules that must be followed, in order for a SoXN document to be valid.}
+		{p:While CoIN is quite liberal, there are some rules that must be followed, in order for a CoIN document to be valid.}
 
 		{ul:
 			{li:{p:An attribute list cannot be empty. This means that the following is illegal:}

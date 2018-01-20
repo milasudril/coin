@@ -8,7 +8,7 @@
 static void show(const std::string& str)
 	{printf("%s",str.c_str());}
 
-static void show(const SoXN::Element& element)
+static void show(const CoIN::Element& element)
 	{
 	printf("<%s",element.name().c_str());
 	element.visitAttributes([](const auto& attrib)
@@ -22,23 +22,23 @@ static void show(const SoXN::Element& element)
 int main()
 	{
 		{
-		SoXN::Element test_a("html");
-		test_a.append(SoXN::Element("head"));
+		CoIN::Element test_a("html");
+		test_a.append(CoIN::Element("head"));
 
-		SoXN::Element test_b("body");
+		CoIN::Element test_b("body");
 		test_a.append(test_b);
 		show(test_a);
 		putchar('\n');
 		}
 
 
-	SoXN::Element test_b("html");
+	CoIN::Element test_b("html");
 
-	auto head=test_b.create(SoXN::Element("head"));
-	head->create(SoXN::Element("meta"))
+	auto head=test_b.create(CoIN::Element("head"));
+	head->create(CoIN::Element("meta"))
 		->attributeAdd({"charset","UTF-8"});
 
-	head->create(SoXN::Element("title"))
+	head->create(CoIN::Element("title"))
 		->append("Hello, World").append(" More stuff");
 
 	show(test_b);

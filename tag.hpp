@@ -2,14 +2,14 @@
 //@	"targets":[{"name":"tag.hpp","type":"include"}]
 //@	}
 
-#ifndef SOXN_TAG_HPP
-#define SOXN_TAG_HPP
+#ifndef COIN_TAG_HPP
+#define COIN_TAG_HPP
 
 #include <string>
 #include <map>
 #include <algorithm>
 
-namespace SoXN
+namespace CoIN
 	{
 	class Tag
 		{

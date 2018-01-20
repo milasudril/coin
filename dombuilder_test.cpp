@@ -3,20 +3,20 @@
 #include <cstdio>
 #include "dombuilder.hpp"
 #include "xmlwriter.hpp"
-#include "lexer_soxn.hpp"
+#include "lexer_coin.hpp"
 
 int main()
 	{
-	auto status=SoXN::ParseResult::MoreData;
-	while(status==SoXN::ParseResult::MoreData)
+	auto status=CoIN::ParseResult::MoreData;
+	while(status==CoIN::ParseResult::MoreData)
 		{
-		SoXN::Element element;
-		status=SoXN::load(stdin,SoXN::LexerSoXN{},element);
-		if(status==SoXN::ParseResult::Error)
+		CoIN::Element element;
+		status=CoIN::load(stdin,CoIN::LexerCoIN{},element);
+		if(status==CoIN::ParseResult::Error)
 			{return -1;}
 		if(element)
 			{
-			SoXN::XMLWriter<FILE*> writer(stdout);
+			CoIN::XMLWriter<FILE*> writer(stdout);
 			write(element,writer);
 			}
 		}

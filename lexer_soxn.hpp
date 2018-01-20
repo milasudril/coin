@@ -1,19 +1,19 @@
-//@{"targets":[{"name":"lexer_soxn.hpp","type":"include"}]}
+//@{"targets":[{"name":"lexer_coin.hpp","type":"include"}]}
 
-#ifndef SOXN_LEXERSOXN_HPP
-#define SOXN_LEXERSOXN_HPP
+#ifndef COIN_LEXERCOIN_HPP
+#define COIN_LEXERCOIN_HPP
 
 #include "process_status.hpp"
 #include "saxdriver.hpp"
 #include <cassert>
 
 
-namespace SoXN
+namespace CoIN
 	{
-	class LexerSoXN
+	class LexerCoIN
 		{
 		public:
-			LexerSoXN():state_current(State::Init),state_old(State::Init)
+			LexerCoIN():state_current(State::Init),state_old(State::Init)
 				{}
 
 			template<class Parser,class ErrorPolicy>
@@ -26,7 +26,7 @@ namespace SoXN
 		};
 
 	template<class Parser,class ErrorPolicy>
-	ProcessStatus LexerSoXN::operator()(char ch_in, Token& tok, Parser&& output, ErrorPolicy&& err)
+	ProcessStatus LexerCoIN::operator()(char ch_in, Token& tok, Parser&& output, ErrorPolicy&& err)
 		{
 		switch(state_current)
 			{

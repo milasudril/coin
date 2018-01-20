@@ -1,12 +1,12 @@
 //@	{"targets":[{"name":"node.hpp","type":"include"}]}
 
-#ifndef SOXN_NODE_HPP
-#define SOXN_NODE_HPP
+#ifndef COIN_NODE_HPP
+#define COIN_NODE_HPP
 
 #include <utility>
 #include <cassert>
 
-namespace SoXN
+namespace CoIN
 	{
 	template<class ElementModel,class StringModel>
 	class Node //[Upgrade lang C++17]: variant

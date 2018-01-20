@@ -2,12 +2,12 @@
 //@	"targets":[{"name":"token.hpp","type":"include"}]
 //@	}
 
-#ifndef SOXN_TOKEN_HPP
-#define SOXN_TOKEN_HPP
+#ifndef COIN_TOKEN_HPP
+#define COIN_TOKEN_HPP
 
 #include <string>
 
-namespace SoXN
+namespace CoIN
 	{
 	enum class TokenType:int
 		{

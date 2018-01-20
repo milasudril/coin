@@ -2,12 +2,12 @@
 //@	"targets":[{"name":"xmlwriter.hpp","type":"include"}]
 //@	}
 
-#ifndef SOXN_XMLWRITER_HPP
-#define SOXN_XMLWRITER_HPP
+#ifndef COIN_XMLWRITER_HPP
+#define COIN_XMLWRITER_HPP
 
 #include "tag.hpp"
 
-namespace SoXN
+namespace CoIN
 	{
 	namespace detail
 		{
