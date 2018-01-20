@@ -4,7 +4,6 @@
 #define COIN_LEXERCOIN_HPP
 
 #include "process_status.hpp"
-#include "saxdriver.hpp"
 #include <cassert>
 
 

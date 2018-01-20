@@ -12,14 +12,14 @@
 
 namespace CoIN
 	{
-	template<class EventHandler>
-	class SAXDriver
+	template<class OutputFunction>
+	class Parser
 		{
 		public:
-			explicit SAXDriver(EventHandler&& eh):r_eh(eh)
+			explicit Parser(OutputFunction&& output):r_output(output)
 				{}
 
-			explicit SAXDriver(EventHandler& eh):r_eh(eh)
+			explicit Parser(OutputFunction& output):r_output(output)
 				{}
 
 			template<class ErrorPolicy>
@@ -32,7 +32,7 @@ namespace CoIN
 						if(token.value=="!")
 							{
 							m_tag_current=Tag(token.value);
-							r_eh.commentBegin();
+							r_output.commentBegin();
 							return ProcessStatus::NoError;
 							}
 
@@ -48,7 +48,7 @@ namespace CoIN
 						else
 							{m_tag_current=Tag(token.value);}
 						m_tag_prev.clear();
-						r_eh.elementBegin(m_tag_current);
+						r_output.elementBegin(m_tag_current);
 						return ProcessStatus::NoError;
 
 					case CoIN::TokenType::TagName:
@@ -68,7 +68,7 @@ namespace CoIN
 							err(token, "Body text must be written within an element.");
 							return ProcessStatus::Error;
 							}
-						r_eh.output(token.value);
+						r_output.output(token.value);
 						return ProcessStatus::NoError;
 
 					case CoIN::TokenType::AttributeNameFirst:
@@ -97,7 +97,7 @@ namespace CoIN
 					case CoIN::TokenType::AttributeValueLast:
 						m_attrib.second=token.value;
 						m_tag_current.attributeAdd(m_attrib);
-						r_eh.elementBegin(m_tag_current);
+						r_output.elementBegin(m_tag_current);
 						return ProcessStatus::NoError;
 
 					case CoIN::TokenType::BodyTextLast:
@@ -107,11 +107,11 @@ namespace CoIN
 							return ProcessStatus::Error;
 							}
 						if(m_tag_current.name()=="!")
-							{r_eh.commentEnd(token.value);}
+							{r_output.commentEnd(token.value);}
 						else
 							{
-							r_eh.output(token.value);
-							r_eh.elementEnd(m_tag_current);
+							r_output.output(token.value);
+							r_output.elementEnd(m_tag_current);
 							m_tag_prev=m_tag_current;
 							if(m_tag_stack.size()==1)
 								{return ProcessStatus::DocumentEnd;}
@@ -136,7 +136,7 @@ namespace CoIN
 			Tag m_tag_current;
 			std::stack<Tag> m_tag_stack;
 			Tag::Attribute m_attrib;
-			EventHandler& r_eh;
+			OutputFunction& r_output;
 		};
 	}
 #endif

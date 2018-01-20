@@ -7,7 +7,7 @@
 
 #include "token.hpp"
 #include "errorpolicy.hpp"
-#include "saxdriver.hpp"
+#include "parser.hpp"
 #include <cassert>
 
 namespace CoIN
@@ -15,11 +15,12 @@ namespace CoIN
 	enum class ParseResult:int{NoError,MoreData,Error};
 
 	template<class Stream,class Lexer,class OutputFunction,class ErrorHandler=LogAndAbort>
-	ParseResult tokenize(Stream& stream,Lexer&& lexer,SAXDriver<OutputFunction>&& output
+	ParseResult tokenize(Stream& stream,Lexer&& lexer,OutputFunction&& parser_output
 		,ErrorHandler&& err=LogAndAbort{})
 		{
 		auto status=ProcessStatus::NoError;
 		typedef decltype(status) ProcessStatus;
+		Parser<OutputFunction> output(std::forward<OutputFunction>(parser_output));
 
 		auto keepGoing=[](ProcessStatus status)
 			{
