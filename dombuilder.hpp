@@ -5,7 +5,7 @@
 #ifndef COIN_DOMBUILDER_HPP
 #define COIN_DOMBUILDER_HPP
 
-#include "tokenizer.hpp"
+#include "input.hpp"
 #include "element.hpp"
 
 namespace CoIN
@@ -58,7 +58,7 @@ namespace CoIN
 	template<class InputStream,class Lexer,class ErrorPolicy=LogAndAbort>
 	inline ParseResult load(InputStream&& stream,Lexer&& lexer,Element& element,ErrorPolicy&& err=LogAndAbort{})
 		{
-		return tokenize(std::forward<InputStream>(stream),std::forward<Lexer>(lexer),DOMBuilder(element));
+		return read(std::forward<InputStream>(stream),std::forward<Lexer>(lexer),DOMBuilder(element));
 		}
 	}
 

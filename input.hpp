@@ -1,9 +1,9 @@
 //@	{
-//@	"targets":[{"name":"tokenizer.hpp","type":"include"}]
+//@	"targets":[{"name":"input.hpp","type":"include"}]
 //@	}
 
-#ifndef COIN_TOKENIZER_HPP
-#define COIN_TOKENIZER_HPP
+#ifndef COIN_INPUT_HPP
+#define COIN_INPUT_HPP
 
 #include "token.hpp"
 #include "errorpolicy.hpp"
@@ -15,7 +15,7 @@ namespace CoIN
 	enum class ParseResult:int{NoError,MoreData,Error};
 
 	template<class Stream,class Lexer,class OutputFunction,class ErrorHandler=LogAndAbort>
-	ParseResult tokenize(Stream& stream,Lexer&& lexer,OutputFunction&& parser_output
+	ParseResult read(Stream& stream,Lexer&& lexer,OutputFunction&& parser_output
 		,ErrorHandler&& err=LogAndAbort{})
 		{
 		auto status=ProcessStatus::NoError;
