@@ -29,6 +29,13 @@ namespace CoIN
 		int row;
 		int col;
 		};
+
+	auto row(const Token& tok) noexcept
+		{return tok.row;}
+
+	auto col(const Token& tok) noexcept
+		{return tok.col;}
+
 	}
 
 #endif

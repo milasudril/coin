@@ -5,6 +5,7 @@
 #ifndef COIN_TAG_HPP
 #define COIN_TAG_HPP
 
+#include "errorpolicy.hpp"
 #include <string>
 #include <map>
 #include <algorithm>
@@ -18,14 +19,20 @@ namespace CoIN
 
 			Tag()=default;
 
-			explicit Tag(const std::string& name, int row=0, int col=0):m_name(name),m_row(row),m_col(col)
-				{}
-
-			explicit Tag(std::string&& name)
+			template<class ErrorPolicy=LogAndAbort>
+			explicit Tag(const std::string& name, int row=0, int col=0,ErrorPolicy&& err=LogAndAbort{}):
+				m_name(name),m_row(row),m_col(col)
 				{
-				if(name=="")
-					{abort();}
+				if(m_name=="")
+					{err(*this, "Tag names must not be empty");}
+				}
+
+			template<class ErrorPolicy=LogAndAbort>
+			explicit Tag(std::string&& name, int row=0, int col=0,ErrorPolicy&& err=LogAndAbort{})
+				{
 				m_name=std::move(name);
+				if(m_name=="")
+					{err(*this, "Tag names must not be empty");}
 				}
 
 			const std::string& name() const
@@ -46,36 +53,39 @@ namespace CoIN
 				}
 
 
-
-			const std::string& attribute(const std::string& name) const
+			template<class ErrorPolicy=LogAndAbort>
+			const std::string& attribute(const std::string& name,ErrorPolicy&& err=LogAndAbort{}) const
 				{
 				auto i=m_attribs.find(name);
 				if(i==m_attribs.end())
-					{abort();}
+					{err(*this,"Attribute does not exisist");}
 				return i->second;
 				}
 
-			std::string& attribute(const std::string& name)
+			template<class ErrorPolicy=LogAndAbort>
+			std::string& attribute(const std::string& name,ErrorPolicy&& err=LogAndAbort{})
 				{
 				auto i=m_attribs.find(name);
 				if(i==m_attribs.end())
-					{abort();}
+					{err(*this,"Attribute does not exisist");}
 				return i->second;
 				}
 
-			std::string& attributeCreate(const std::string& name)
+			template<class ErrorPolicy=LogAndAbort>
+			std::string& attributeCreate(const std::string& name,ErrorPolicy&& err=LogAndAbort{})
 				{
 				auto ip=m_attribs.insert({name,""});
 				if(!ip.second)
-					{abort();}
+					{err(*this,"Attribute has already been set");}
 				return ip.first->second;
 				}
 
-			Tag& attributeAdd(const Attribute& attrib)
+			template<class ErrorPolicy=LogAndAbort>
+			Tag& attributeAdd(const Attribute& attrib,ErrorPolicy&& err=LogAndAbort{})
 				{
 				auto ip=m_attribs.insert(attrib);
 				if(!ip.second)
-					{abort();}
+					{err(*this,"Attribute has already been set");}
 				return *this;
 				}
 
@@ -100,5 +110,12 @@ namespace CoIN
 			int m_row;
 			int m_col;
 		};
+
+	auto row(const Tag& tag) noexcept
+		{return tag.row();}
+
+	auto col(const Tag& tag) noexcept
+		{return tag.col();}
+
 	}
 #endif
