@@ -110,8 +110,8 @@ namespace CoIN
 						}
 					default:
 						tok.value+=ch_in;
+						return ProcessStatus::NoError;
 					}
-				return ProcessStatus::NoError;
 
 			case State::AttributeList:
 				switch(ch_in)
