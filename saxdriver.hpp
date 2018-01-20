@@ -7,6 +7,7 @@
 
 #include "token.hpp"
 #include "tag.hpp"
+#include "process_status.hpp"
 #include <stack>
 
 namespace SoXN
@@ -20,8 +21,6 @@ namespace SoXN
 
 			explicit SAXDriver(EventHandler& eh):r_eh(eh)
 				{}
-
-			enum ProcessStatus:int{NoError,DocumentEnd,Error};
 
 			template<class ErrorPolicy>
 			__attribute__((warn_unused_result)) ProcessStatus operator()(const SoXN::Token& token,ErrorPolicy& err)
