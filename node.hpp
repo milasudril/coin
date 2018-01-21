@@ -113,7 +113,7 @@ namespace CoIN
 		};
 
 	template<class ElementModel,class StringModel,class Function>
-	void visit(const Node<ElementModel,StringModel>& node,Function&& f)
+	void visit(const Node<ElementModel,StringModel>& node, Function&& f)
 		{
 		typedef typename Node<ElementModel,StringModel>::Type NodeType;
 		switch(node.type())
@@ -129,7 +129,7 @@ namespace CoIN
 
 
 	template<class ElementModel,class StringModel,class Function>
-	void visit(Node<ElementModel,StringModel>& node,Function&& f)
+	void visit(Node<ElementModel,StringModel>& node, Function&& f)
 		{
 		typedef typename Node<ElementModel,StringModel>::Type NodeType;
 		switch(node.type())

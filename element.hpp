@@ -9,6 +9,7 @@
 #include "tag.hpp"
 #include <vector>
 #include <cassert>
+#include <map>
 
 namespace CoIN
 	{
@@ -82,14 +83,42 @@ namespace CoIN
 			template<class Function>
 			const Element& visitChildren(Function&& f) const
 				{
-				std::for_each(m_children.begin(), m_children.end(), [&f](const auto& node){visit(node,f);});
+				std::for_each(m_children.begin(), m_children.end(), [&f](const auto& node)
+					{visit(node,f);});
 				return *this;
 				}
 
 			template<class Function>
 			Element& visitChildren(Function&& f)
 				{
-				std::for_each(m_children.begin(), m_children.end(), [&f](auto& node){visit(node,f);});
+				std::for_each(m_children.begin(), m_children.end(), [&f](auto& node)
+					{visit(node,f);});
+				return *this;
+				}
+
+			template<class Function>
+			Element& visitElements(Function&& f)
+				{
+				int i=0;
+				std::for_each(m_children.begin(), m_children.end(), [&f,&i](auto& node)
+					{
+					if(node.type()==NodeModel::Type::Element)
+						{f(node.template getAs<Element>(), i);}
+					++i;
+					});
+				return *this;
+				}
+
+			template<class Function>
+			const Element& visitElements(Function&& f) const
+				{
+				int i=0;
+				std::for_each(m_children.begin(), m_children.end(), [&f,&i](auto& node)
+					{
+					if(node.type()==NodeModel::Type::Element)
+						{f(node.template getAs<Element>(), i);}
+					++i;
+					});
 				return *this;
 				}
 
@@ -174,6 +203,14 @@ namespace CoIN
 		element.visitChildren([&writer](const auto& node)
 			{write(node, writer);});
 		writer.elementEnd(element.tag());
+		}
+
+	auto indexElements(const Element& e)
+		{
+		std::map<std::string,std::vector<int>> ret;
+		e.visitElements([&ret](const auto& child,int index)
+			{ret[child.name()].push_back(index);});
+		return std::move(ret);
 		}
 	}
 
