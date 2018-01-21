@@ -204,14 +204,6 @@ namespace CoIN
 			{write(node, writer);});
 		writer.elementEnd(element.tag());
 		}
-
-	auto indexElements(const Element& e)
-		{
-		std::map<std::string,std::vector<int>> ret;
-		e.visitElements([&ret](const auto& child,int index)
-			{ret[child.name()].push_back(index);});
-		return std::move(ret);
-		}
 	}
 
 #endif
