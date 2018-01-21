@@ -1,7 +1,7 @@
 //@	{"targets":[{"name":"dombuilder_test","type":"application"}]}
 
 #include "dombuilder.hpp"
-#include "xmlwriter.hpp"
+#include "writerxml.hpp"
 #include "lexercoin.hpp"
 
 int main()
@@ -14,10 +14,7 @@ int main()
 		if(status==CoIN::ParseResult::Error)
 			{return -1;}
 		if(element)
-			{
-			CoIN::XMLWriter<FILE*> writer(stdout);
-			write(element,writer);
-			}
+			{write(element,CoIN::WriterXML<FILE*>(stdout));}
 		}
 	return 0;
 	}

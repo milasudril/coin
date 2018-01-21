@@ -1,11 +1,11 @@
 //@	{"targets":[{"name":"coin2xml","type":"application"}]}
 
 #include "input.hpp"
-#include "xmlwriter.hpp"
+#include "writerxml.hpp"
 #include "lexercoin.hpp"
 
 int main()
 	{
-	CoIN::read(stdin, CoIN::LexerCoIN{}, CoIN::XMLWriter<FILE*>(stdout));
+	read(stdin, CoIN::LexerCoIN{}, CoIN::WriterXML<FILE*>(stdout));
 	return 0;
 	}

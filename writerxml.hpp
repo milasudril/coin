@@ -1,9 +1,9 @@
 //@	{
-//@	"targets":[{"name":"xmlwriter.hpp","type":"include"}]
+//@	"targets":[{"name":"writerxml.hpp","type":"include"}]
 //@	}
 
-#ifndef COIN_XMLWRITER_HPP
-#define COIN_XMLWRITER_HPP
+#ifndef COIN_WRITERXML_HPP
+#define COIN_WRITERXML_HPP
 
 #include "tag.hpp"
 
@@ -76,10 +76,10 @@ namespace CoIN
 		}
 
 	template<class Stream>
-	class XMLWriter
+	class WriterXML
 		{
 		public:
-			explicit XMLWriter(Stream& stream):r_stream(stream)
+			explicit WriterXML(Stream& stream):r_stream(stream)
 				{fputs("<?xml version=\"1.0\"?>",r_stream);}
 
 			void commentBegin()
