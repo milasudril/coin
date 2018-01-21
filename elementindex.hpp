@@ -59,6 +59,18 @@ namespace CoIN
 				return r_owner.node(i->second[index]).template getAs<Element>();
 				}
 
+			template<class Function,class ErrorPolicy=ErrorPolicyDefault_>
+			const ElementIndex& visit(const std::string& element_name,Function&& f
+				,ErrorPolicy&& err=ErrorPolicyDefault_{}) const
+				{
+				auto i=m_elements.find(element_name);
+				if(i==m_elements.end())
+					{err(r_owner.tag(),"Element not found");}
+				std::for_each(i->second.begin(),i->second.end(),[f,this](int index)
+					{f(r_owner.node(index).template getAs<Element>());});
+				return *this;
+				}
+
 		private:
 			Element& r_owner;
 			std::map<std::string,std::vector<int>> m_elements;
