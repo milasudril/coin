@@ -58,6 +58,13 @@ namespace CoIN
 				return *this;
 				}
 
+			Element& appendInner(const Element& element)
+				{
+				element.visitChildren([this](const auto& node)
+					{this->append(node);});
+				return *this;
+				}
+
 			template<class T>
 			auto create(T&& content)
 				{
