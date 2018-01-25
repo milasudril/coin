@@ -211,6 +211,22 @@ namespace CoIN
 			{write(node, writer);});
 		writer.elementEnd(element.tag());
 		}
+
+	void addContentToString(const std::string& str_in,std::string& str)
+		{str+=str_in;}
+
+	void addContentToString(const CoIN::Element& element,std::string& str)
+		{
+		element.visitChildren([&str](const auto& node)
+			{addContentToString(node,str);});
+		}
+
+	std::string valueOf(const CoIN::Element& element)
+		{
+		std::string ret;
+		addContentToString(element,ret);
+		return ret;
+		}
 	}
 
 #endif
