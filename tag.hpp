@@ -27,6 +27,9 @@ namespace CoIN
 					{err(*this, "Tag names must not be empty");}
 				}
 
+			explicit Tag(std::string&& name,int row=0, int col=0):m_name(std::move(name)),m_row(row),m_col(col)
+				{}
+
 			const std::string& name() const
 				{return m_name;}
 

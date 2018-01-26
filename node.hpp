@@ -23,6 +23,12 @@ namespace CoIN
 			explicit Node(const ElementModel& e):m_type(Type::Element)
 				{m_element=new ElementModel(e);}
 
+			explicit Node(StringModel&& leaf):m_type(Type::String)
+				{m_string=new StringModel(std::move(leaf));}
+
+			explicit Node(ElementModel&& e):m_type(Type::Element)
+				{m_element=new ElementModel(std::move(e));}
+
 			Node(const Node& node)
 				{
 				m_type=node.type();

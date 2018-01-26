@@ -39,6 +39,9 @@ namespace CoIN
 				m_tag(name,0,0,std::forward<ErrorPolicy>(err))
 				{}
 
+			explicit Element(std::string&& name) noexcept : m_tag(std::move(name),0,0)
+				{}
+
 			explicit Element(const Tag& tag):m_tag(tag)
 				{}
 
